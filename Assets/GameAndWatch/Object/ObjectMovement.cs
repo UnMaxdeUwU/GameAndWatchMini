@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ObjectMovement : MonoBehaviour
@@ -9,6 +10,17 @@ public class ObjectMovement : MonoBehaviour
     [SerializeField] private AudioEventDispatcher _audioEventDispatcher;
     [SerializeField] private AudioType _objectmovement;
     [SerializeField] private AudioType _destruction;
+    [SerializeField] private int idLine;
+    private PlayerMovement _playerMovement;
+    public Action<int,int> indexChange;
+
+
+
+    private void Awake()
+    {
+        _playerMovement = FindObjectOfType<PlayerMovement>();
+    }
+    
     public void Init(GameObject NewObject)
     {
         _objectfalling = NewObject;
@@ -18,11 +30,13 @@ public class ObjectMovement : MonoBehaviour
     private void OnEnable()
     {
         _timeManager.OnTimePassed += MoveObject;
+        _playerMovement.ObjectSmash += Destroy;
     }
     
     private void OnDisable()
     {
         _timeManager.OnTimePassed -= MoveObject;
+        _playerMovement.ObjectSmash -= Destroy;
     }
 
     private void MoveObject()
@@ -36,6 +50,7 @@ public class ObjectMovement : MonoBehaviour
         {
             _objectfalling.transform.position = _transforms[_index].position;
             _audioEventDispatcher.Playaudio(_objectmovement);
+            indexChange?.Invoke(idLine, _index);
         }
         else
         {
@@ -43,5 +58,10 @@ public class ObjectMovement : MonoBehaviour
             _audioEventDispatcher.Playaudio(_destruction);
             _index = -1;
         }
+    }
+
+    private void Destroy()
+    {
+        Destroy(_objectfalling);
     }
 }
