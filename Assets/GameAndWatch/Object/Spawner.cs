@@ -14,12 +14,7 @@ public class Spawner : MonoBehaviour
 
   private void Start()
   {
-    int randomObject = Random.Range(0, 1);
-    if (randomObject == 0)
-    {
-      ObjectToSpawn = _GoodObjects;
-    }
-    ObjectToSpawn = _BadObjects;
+    ChangeObject();
   }
 
 private void OnEnable()
@@ -44,6 +39,21 @@ private void OnEnable()
     {
       _spawnTimer = 0;
       _fallingLines[random()].Init(Instantiate(ObjectToSpawn));
+      ChangeObject();
     }
+  }
+
+  private void ChangeObject()
+  {
+    int randomObject = Random.Range(0, 2);
+    if (randomObject == 0)
+    {
+      ObjectToSpawn = _GoodObjects;
+    }
+    else
+    {
+      ObjectToSpawn = _BadObjects;
+    }
+
   }
 }

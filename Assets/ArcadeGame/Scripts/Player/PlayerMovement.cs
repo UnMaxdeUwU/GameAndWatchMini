@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
    public Action ObjectSmash;
    
    
-   private int m_currentIndex = 2;
+   public int m_currentIndex = 2;
    private int m_moveSpeed = 1;
    
 
