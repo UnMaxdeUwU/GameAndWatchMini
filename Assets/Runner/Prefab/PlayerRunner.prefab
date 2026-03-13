@@ -14,11 +14,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1168360481151633645, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.41
+      value: 141.39
       objectReference: {fileID: 0}
     - target: {fileID: 1168360481151633645, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.2
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 1168360481151633645, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -61,6 +61,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -2351156727781230690, guid: 145555169c2bcf046a84ab86a1b69300, type: 3}
     - target: {fileID: 2085640114108847231, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
+      propertyPath: m_SortingLayer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2085640114108847231, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2085640114108847231, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -76938955
+      objectReference: {fileID: 0}
+    - target: {fileID: 2085640114108847231, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
@@ -82,7 +94,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8000699691011912478, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
       propertyPath: m_Constraints
-      value: 0
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8000699691011912478, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
+      propertyPath: m_GravityScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8039030803314469957, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
+      propertyPath: health
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1449631335404167370, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
@@ -99,7 +119,24 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 790906433590117686, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7665898612611932637}
+    - targetCorrespondingSourceObject: {fileID: 790906433590117686, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 198482870610495637}
+    - targetCorrespondingSourceObject: {fileID: 790906433590117686, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 520532440374730943}
   m_SourcePrefab: {fileID: 100100000, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
+--- !u!114 &2353396862171849307 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8039030803314469957, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
+  m_PrefabInstance: {fileID: 5708503939230387742}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5026425242412321576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23cff658485b83c46980ea67c0c7f300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthManagerPlayer
 --- !u!61 &3040065314075500786 stripped
 BoxCollider2D:
   m_CorrespondingSourceObject: {fileID: 7280303395935235820, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
@@ -122,10 +159,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c8cab7f7c42b6a488bffd85b9050cff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovementPlayerRunner
-  jumpForce: 10
+  jumpForce: 50
+  jumpBoostForce: 6
+  jumpBosstDuration: 0.2
+  maxJumpHeight: 5
   dashForce: 20
-  fallMultiplier: 2.5
+  fallMultiplier: 1.25
+  timeAirDuration: 0.2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  groundCheck: {fileID: 6849543735300785907}
+  groundCheckDistance: 7
+  apexHangTime: 0.1
+  apexThreshold: 0.1
+  _freezeTime: 0.4
+  maxAirFreezes: 2
+  dashCooldown: 1
   _inputManager: {fileID: 7665898612611932637}
+  groundCheckRadius: 1
 --- !u!114 &7665898612611932637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,4 +190,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c621ef0d30c9d4444b93b735a565f754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputManagerCustomRunner
+  _tapDuration: 0.2
+  _swipeDuration: 0.4
+  _minimumDistance: 40
   _collider2D: {fileID: 3040065314075500786}
+--- !u!114 &198482870610495637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5026425242412321576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f89232e58b116648b5cd40772608f47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Slam
+  _runner: {fileID: 7665898612611932637}
+  _collider2D: {fileID: 3040065314075500786}
+  damage: 1
+--- !u!114 &520532440374730943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5026425242412321576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd746cde845bad34b9b66c8bae57ceaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Obstacle
+  _healthManagerPlayer: {fileID: 2353396862171849307}
+--- !u!4 &6849543735300785907 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1168360481151633645, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
+  m_PrefabInstance: {fileID: 5708503939230387742}
+  m_PrefabAsset: {fileID: 0}
