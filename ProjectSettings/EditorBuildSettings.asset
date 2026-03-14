@@ -6,8 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Runner.unity
+    guid: f58cab4a0e7fcfd4096edff0e5e8bc42
+  - enabled: 1
     path: Assets/Scenes/GameAndWatch.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/ArcadeGame.unity
+    guid: a8245b5c34ef9d047b060532e5081ffa
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2b3d0dd967d909e4b83cafe74658842e, type: 3}
   m_UseUCBPForAssetBundles: 0

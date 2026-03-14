@@ -9,6 +9,8 @@ public class Slam : MonoBehaviour
     [SerializeField] private Collider2D _collider2D;
     [SerializeField] private float damage = 1;
 
+    [SerializeField] private AudioClip[] attackSounds;
+    
     public static event Action HasAttack;
 
     private bool canAttack = true;
@@ -34,7 +36,6 @@ public class Slam : MonoBehaviour
     private void Attack()
     {
         if (!canAttack) return;
-
         StartCoroutine(ResetAttack());
         _animator.SetTrigger("attack");
         HasAttack?.Invoke();
@@ -45,7 +46,7 @@ public class Slam : MonoBehaviour
         canAttack = false;
         attackActive = true;
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.3f);
 
         attackActive = false;
 
@@ -74,4 +75,10 @@ public class Slam : MonoBehaviour
             hpbox.TakeDamage(damage);
         }
     }
+
+    public void PlaySoundAttack()
+    {
+        SoundFXManager.instance.PlayRandomSound(attackSounds, transform, 1f);
+    }
+    
 }

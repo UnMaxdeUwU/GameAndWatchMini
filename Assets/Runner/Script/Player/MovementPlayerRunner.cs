@@ -33,6 +33,8 @@ public class MovementPlayerRunner : MonoBehaviour
     [SerializeField] private float dashCooldown = 1.5f;
     private bool canDash = true;
     private bool hasDashedInAir = false;
+
+    private float originalGravity; 
     
     private Vector2 LastSafePosition;
     private Vector3 _safeDistance = new Vector3(5f, 0);
@@ -49,12 +51,23 @@ public class MovementPlayerRunner : MonoBehaviour
     private bool isFrozen;
     private bool isWaitingForTap = true;
     
+    [SerializeField] private float invincibilityTime = 1f;
+    private bool isInvincible;
+    
+    
+    [Header("Sound FX")]
+    [SerializeField] private AudioClip dashSound;
+    [SerializeField] private AudioClip jumpSound;
+    [SerializeField] private AudioClip hurtSound;
+    [SerializeField] private AudioClip preDeathSound;
+    [SerializeField] private AudioClip fallingSound;
 
     void Start()
     {
         _animator = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody2D>();
         LastSafePosition = transform.position;
+        originalGravity =  _rb.gravityScale;
     }
 
     private void OnEnable()
@@ -86,13 +99,14 @@ public class MovementPlayerRunner : MonoBehaviour
         if (isDashing) return;
         if (isFrozen) return;
         if (airFreezeCount >= maxAirFreezes) return;
-
+        
         airFreezeCount++;
         StartCoroutine(FreezeAir());
     }
 
     private void Respawn()
     {
+
         StartCoroutine(RespawnPlayer());
     }
 
@@ -101,7 +115,8 @@ public class MovementPlayerRunner : MonoBehaviour
         if(!isWaitingForTap) return;
         
         isWaitingForTap = false;
-        Debug.Log(isWaitingForTap);
+        _animator.SetBool("nothing", false);
+        //Debug.Log(isWaitingForTap);
     }
 
 
@@ -116,7 +131,21 @@ public class MovementPlayerRunner : MonoBehaviour
 
     private void OnHit()
     {
+        if (isInvincible) return;
+
+        StartCoroutine(Invincibility());
+
+        SoundFXManager.instance.PlaySound(hurtSound, transform, 1f);
         _animator.SetTrigger("hurt");
+    }
+    
+    private IEnumerator Invincibility()
+    {
+        isInvincible = true;
+
+        yield return new WaitForSeconds(invincibilityTime);
+
+        isInvincible = false;
     }
 
     private void MoveForward()
@@ -169,8 +198,8 @@ public class MovementPlayerRunner : MonoBehaviour
     private void Jump()
     {
         if (!isGrounded) return;
-        Debug.Log("jump");
-
+        //Debug.Log("jump");
+        SoundFXManager.instance.PlaySound(jumpSound, transform, 1f);
         jumpStartY = transform.position.y;
         _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, jumpForce);
 
@@ -208,8 +237,7 @@ public class MovementPlayerRunner : MonoBehaviour
     private IEnumerator TimeAir()
     {
         isInTimeAir = true;
-
-        float originalGravity = _rb.gravityScale;
+        
         _rb.gravityScale = originalGravity * 0.5f;
 
         yield return new WaitForSeconds(timeAirDuration);
@@ -222,21 +250,13 @@ public class MovementPlayerRunner : MonoBehaviour
     private IEnumerator FreezeAir()
     {
         isFrozen = true;
-
-        var originalConstraints = _rb.constraints;
-        var originalGravity = _rb.gravityScale;
-
+        
         _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0);
-
         _rb.gravityScale = 0f;
-
-        _rb.constraints = RigidbodyConstraints2D.FreezePositionY 
-                          | RigidbodyConstraints2D.FreezeRotation;
 
         yield return new WaitForSeconds(_freezeTime);
 
         _rb.gravityScale = originalGravity;
-        _rb.constraints = originalConstraints;
 
         isFrozen = false;
     }
@@ -244,13 +264,16 @@ public class MovementPlayerRunner : MonoBehaviour
     IEnumerator RespawnPlayer()
     {
         _rb.linearVelocity = Vector2.zero;
-        //mettre vfx
-        //animation
+        _rb.gravityScale = 1f;
+        _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        _animator.SetBool("nothing", true);
+
         isDashing = false;
         isFrozen = false;
-        
-        yield return new WaitForSeconds(0.5f);
         transform.position = LastSafePosition + Vector2.up * 1.5f;
+        SoundFXManager.instance.PlaySound(preDeathSound, transform, 1f);
+        yield return new WaitForSeconds(0.5f);
         isWaitingForTap = true;
     }
     
@@ -266,6 +289,7 @@ public class MovementPlayerRunner : MonoBehaviour
 
         if (_rb.linearVelocity.y < 0)
         {
+            SoundFXManager.instance.PlaySound(fallingSound, transform, 1f);
             _rb.linearVelocity += Vector2.up * Physics2D.gravity.y * fallMultiplier;
         }
     }
@@ -278,6 +302,7 @@ public class MovementPlayerRunner : MonoBehaviour
 
         if (!isGrounded && hasDashedInAir) return;
 
+        SoundFXManager.instance.PlaySound(dashSound, transform, 1f);
         isDashing = true;
         canDash = false;
 

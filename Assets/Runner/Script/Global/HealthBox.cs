@@ -3,19 +3,28 @@ using UnityEngine;
 public class HealthBox : MonoBehaviour
 {
     [SerializeField] private float _health;
-    private SpriteRenderer _spriteRenderer;
+    
+    [SerializeField] AudioClip explosion;
+    private Collider2D _collider;
+    private Animator _animator;
+    
 
     private void Start()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        _animator = GetComponent<Animator>();
+        _collider = GetComponent<Collider2D>();
     }
     
     public void TakeDamage(float damage)
     {
         _health -= damage;
+        _animator.SetTrigger("hit");
+        SoundFXManager.instance.PlaySound(explosion, transform, 1f);
         if (_health <= 0)
         {
-            Die();
+            _animator.SetTrigger("dead");
+
         }
     }
 

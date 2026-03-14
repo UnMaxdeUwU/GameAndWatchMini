@@ -14,11 +14,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1168360481151633645, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 141.39
+      value: 201.4
       objectReference: {fileID: 0}
     - target: {fileID: 1168360481151633645, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3
+      value: -2.66
       objectReference: {fileID: 0}
     - target: {fileID: 1168360481151633645, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -88,6 +88,22 @@ PrefabInstance:
       propertyPath: m_Offset.x
       value: 0.00210464
       objectReference: {fileID: 0}
+    - target: {fileID: 7280303395935235820, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
+      propertyPath: m_Size.x
+      value: 0.3805341
+      objectReference: {fileID: 0}
+    - target: {fileID: 7280303395935235820, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
+      propertyPath: m_Size.y
+      value: 0.16549495
+      objectReference: {fileID: 0}
+    - target: {fileID: 7280303395935235820, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.27205974
+      objectReference: {fileID: 0}
+    - target: {fileID: 7280303395935235820, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.017308086
+      objectReference: {fileID: 0}
     - target: {fileID: 8000699691011912478, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
       propertyPath: m_BodyType
       value: 0
@@ -110,6 +126,7 @@ PrefabInstance:
     - {fileID: 4512872376574314240, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
     - {fileID: 2769424154144350199, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
     - {fileID: 8331455453701051447, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
+    - {fileID: 446963493491614768, guid: 61c0a6ac33ec8ad49a41007000a979c3, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -159,8 +176,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c8cab7f7c42b6a488bffd85b9050cff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovementPlayerRunner
-  jumpForce: 50
-  jumpBoostForce: 6
+  jumpForce: 8
+  jumpBoostForce: 1
   jumpBosstDuration: 0.2
   maxJumpHeight: 5
   dashForce: 20
@@ -177,6 +194,12 @@ MonoBehaviour:
   maxAirFreezes: 2
   dashCooldown: 1
   _inputManager: {fileID: 7665898612611932637}
+  invincibilityTime: 2
+  dashSound: {fileID: 8300000, guid: 0cfba48fb7578b248915819185ddd51a, type: 3}
+  jumpSound: {fileID: 8300000, guid: 15bbb7e7b557ca14a8701480cd8fafda, type: 3}
+  hurtSound: {fileID: 8300000, guid: 9eabb131014142644a63b71b49d4e41b, type: 3}
+  preDeathSound: {fileID: 8300000, guid: 2750ac9a94dfd924fb6e3981677ed292, type: 3}
+  fallingSound: {fileID: 8300000, guid: 27a456ffd9780a042be00db12d8a22e6, type: 3}
   groundCheckRadius: 1
 --- !u!114 &7665898612611932637
 MonoBehaviour:
@@ -209,6 +232,10 @@ MonoBehaviour:
   _runner: {fileID: 7665898612611932637}
   _collider2D: {fileID: 3040065314075500786}
   damage: 1
+  attackSounds:
+  - {fileID: 8300000, guid: 868a78c918f8b5746bfbf4f51b26521f, type: 3}
+  - {fileID: 8300000, guid: 657d6a07df7c16a42ba05452629f9646, type: 3}
+  - {fileID: 8300000, guid: 9f8603f4dee91e8409d6d9b775238285, type: 3}
 --- !u!114 &520532440374730943
 MonoBehaviour:
   m_ObjectHideFlags: 0
