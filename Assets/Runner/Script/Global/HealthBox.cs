@@ -23,6 +23,7 @@ public class HealthBox : MonoBehaviour
         SoundFXManager.instance.PlaySound(explosion, transform, 1f);
         if (_health <= 0)
         {
+            _collider.enabled = false;
             _animator.SetTrigger("dead");
 
         }

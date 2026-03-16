@@ -7,6 +7,8 @@ public class CollisionObstacle : MonoBehaviour
     [SerializeField] private HealthManagerPlayer _healthManagerPlayer;
     private Rigidbody2D _rigidbody2D;
     public static event Action PlayerFallInVoid;
+    public static event Action Checkpoint;
+    public static event Action Spike;
 
     private void Start()
     {
@@ -17,7 +19,8 @@ public class CollisionObstacle : MonoBehaviour
         if (other.gameObject.GetComponent<Spike>() != null)
         {
             _healthManagerPlayer.TakeDamage(1);
-            _rigidbody2D.position += Vector2.left * 1.5f;
+            Spike?.Invoke();
+
         }
         else if (other.gameObject.GetComponent<Void>() != null)
         {
@@ -25,6 +28,14 @@ public class CollisionObstacle : MonoBehaviour
             PlayerFallInVoid?.Invoke();
         }
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.GetComponent<CheckPoint>() != null)
+        {
+            Checkpoint?.Invoke();
+        }
     }
     
     

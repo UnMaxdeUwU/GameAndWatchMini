@@ -11,6 +11,7 @@ public class HealthManagerPlayer : MonoBehaviour
     {
         health -= damage;
         OnHealthChanged?.Invoke();
+        Debug.LogWarning("HealthChange");
         if (health <= 0)
         {
             Die();

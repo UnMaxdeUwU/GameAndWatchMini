@@ -8,6 +8,8 @@ public class Spawner_Enemy : MonoBehaviour
     [SerializeField] private int _spawnTimer = 0;
     [SerializeField] private int _spawnDelayDuration = 3;
 
+    private int spawnerindex;
+
     private void OnEnable()
     {
         _timeManager.OnTimePassed += TimeGestion;
@@ -18,9 +20,9 @@ public class Spawner_Enemy : MonoBehaviour
         _timeManager.OnTimePassed -= TimeGestion;
     }
 
-    private int random()
+    private void random()
     {
-        return Random.Range(0, spawner.Length);
+         spawnerindex = Random.Range(0, spawner.Length);
     }
 
     private void TimeGestion()
@@ -29,7 +31,16 @@ public class Spawner_Enemy : MonoBehaviour
         if (_spawnTimer >= _spawnDelayDuration)
         {
             _spawnTimer = 0;
-            Instantiate(Enemy,  spawner[random()].position, Quaternion.identity);
+            random();
+            if (spawnerindex == 0)
+            {
+                Instantiate(Enemy,  spawner[spawnerindex].position, Quaternion.identity);
+            }
+            else
+            {
+                Instantiate(Enemy, spawner[spawnerindex].position, Quaternion.Euler(0f, -180f, 0f));
+            }
+
         }
     }
 }

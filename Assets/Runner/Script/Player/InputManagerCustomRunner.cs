@@ -1,210 +1,92 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using System;
-using System.Collections;
 
 public class InputManagerCustomRunner : MonoBehaviour
 {
-  public event Action OnMoveLeft; // event dispatcher left
-  public event Action OnMoveRight; // event dispatcher right
+    public event Action OnMoveLeft;
+    public event Action OnMoveRight;
 
-  [SerializeField] private float _tapDuration = 0.2f;
-  [SerializeField] float _swipeDuration = 0.5f;
-  [SerializeField] float _minimumDistance = 15f;
-  
-  private SpriteRenderer _spriteRenderer;
-  private float _tapTimer = 0.0f;
-  private float _swipeTimer = 0.0f;
-  private bool _isTouching = false;
-  private float width = 0.0f;
-  private float height = 0.0f;
+    public event Action OnTape;
+    public event Action OnSwipeDown;
+    public event Action OnSwipeUp;
+    public event Action OnSwipeLeft;
+    public event Action OnSwipeRight;
 
+    private RunnerInput controls;
 
-  private Vector2 startPosition;
-  private Vector2 endPosition;
-  public event Action OnTape;
-  public event Action OnSwipeDown;
-  public event Action OnSwipeUp;
-  public event Action OnSwipeLeft;
-  public event Action OnSwipeRight;
+    private Vector2 startTouchPosition;
+    private Vector2 endTouchPosition;
 
+    [SerializeField] private float minSwipeDistance = 50f;
 
-
-
-  [SerializeField] Collider2D _collider2D;
-
-  //private InputAction _tapAction;
-
-  private void Start()
-  {
-    width = Screen.width;
-    height = Screen.height;
-    _spriteRenderer = GetComponent<SpriteRenderer>();
-
-    //_tapAction = InputSystem.actions.FindAction("Tap");
-  }
-
-
-  public void OnTap()
-  {
-    Debug.Log("OnTap");
-    OnTape?.Invoke();
-
-  }
-
-  private void Update()
-  {
-    /*if (Touch.activeTouches.Count <= 0)
+    private void Awake()
     {
-      return;
+        controls = new RunnerInput();
     }
-    Touch touch = _tapAction.ReadValue<Touch>();
-    if (touch.phase == TouchPhase.Began)
+
+    private void OnEnable()
     {
-      startPosition = touch.screenPosition;
+        controls.Enable();
+
+        controls.Gameplay.TouchPress.started += StartTouch;
+        controls.Gameplay.TouchPress.canceled += EndTouch;
     }
-    else if (touch.phase == TouchPhase.Moved)
+
+    private void OnDisable()
     {
-      endPosition = touch.screenPosition;
-      OnSwipe();
-    }*/
+        controls.Gameplay.TouchPress.started -= StartTouch;
+        controls.Gameplay.TouchPress.canceled -= EndTouch;
 
-    if (Input.touchCount > 0)
+        controls.Disable();
+    }
+
+    private void StartTouch(InputAction.CallbackContext ctx)
     {
-      Touch firstTouch = Input.GetTouch(0);
+        startTouchPosition = controls.Gameplay.TouchPosition.ReadValue<Vector2>();
+    }
 
-      if (firstTouch.phase == TouchPhase.Began)
-      {
-        _isTouching = true;
-        startPosition = firstTouch.position;
-      }
-      else if (firstTouch.phase == TouchPhase.Ended)
-      {
-        _isTouching = false;
-        endPosition = firstTouch.position;
+    private void EndTouch(InputAction.CallbackContext ctx)
+    {
+        endTouchPosition = controls.Gameplay.TouchPosition.ReadValue<Vector2>();
 
-        float distance = Vector2.Distance(startPosition, endPosition);
+        DetectSwipe();
+    }
 
-        if (distance > _minimumDistance)
+    private void DetectSwipe()
+    {
+        Vector2 delta = endTouchPosition - startTouchPosition;
+
+        if (delta.magnitude < minSwipeDistance)
         {
-          OnSwipe();
-        }
-        else if (_tapTimer <= _tapDuration)
-        {
-          Debug.Log($"Tap OK Touch at {firstTouch.position}");
-          OnTap();
-
-          if (firstTouch.position.x < width / 2)
-          {
-            MoveRight();
-          }
-          else
-          {
-            MoveLeft();
-          }
+            OnTape?.Invoke();
+            return;
         }
 
-        _tapTimer = 0f;
-        _swipeTimer = 0.0f;
-      }
-      
-    }
+        delta.Normalize();
 
-    if (_isTouching)
-    {
-      _tapTimer += Time.deltaTime;
-      _swipeTimer += Time.deltaTime;
+        float dotUp = Vector2.Dot(delta, Vector2.up);
+        float dotRight = Vector2.Dot(delta, Vector2.right);
 
-    }
-
-
-    if (Input.GetKeyDown(KeyCode.RightArrow))
-    {
-      MoveRight();
-    }
-
-    if (Input.GetKeyDown(KeyCode.LeftArrow))
-    {
-      MoveLeft();
-    }
-
-  }
-
-
-
-  public void MoveLeft()
-  {
-    //OnMoveLeft?.Invoke(); // appel de l'event dispatcher associé
-    OnMoveLeft?.Invoke();
-  }
-
-  public void MoveRight()
-  {
-    // appel de l'event dispatcher associé
-    OnMoveRight?.Invoke();
-
-  }
-
-  /*public void OnSwipe()
-  {
-    Vector2 delta = endPosition - startPosition;
-    delta = delta.normalized;
-
-    float dot = Vector2.Dot(delta, Vector2.right);
-
-    if (Mathf.Abs(dot) > 0.7f)
-    {
-      if (dot < 0.0f)
-      {
-          ;   //swipegauche
-      }
-      else
-      {
-         ();
-      }
-    }
-  }*/
-  public void OnSwipe()
-  {
-    if (Vector2.Distance(startPosition, endPosition) > _minimumDistance)
-    {
-      //Debug.Log(Vector2.Distance(startPosition, endPosition));
-      Vector2 delta = endPosition - startPosition;
-      delta = delta.normalized;
-
-      float dotUp = Vector2.Dot(delta, Vector2.up);
-      float dotRight = Vector2.Dot(delta, Vector2.right);
-
-      if (Mathf.Abs(dotUp) > Mathf.Abs(dotRight))
-      {
-        // Swipe vertical
-        if (dotUp > 0)
+        if (Mathf.Abs(dotUp) > Mathf.Abs(dotRight))
         {
-          Debug.Log("Swipe Up");
-          OnSwipeUp?.Invoke();
+            if (dotUp > 0)
+                OnSwipeUp?.Invoke();
+            else
+                OnSwipeDown?.Invoke();
         }
         else
         {
-          Debug.Log("Swipe Down");
-          OnSwipeDown?.Invoke();
+            if (dotRight > 0)
+            {
+                OnSwipeRight?.Invoke();
+                OnMoveRight?.Invoke();
+            }
+            else
+            {
+                OnSwipeLeft?.Invoke();
+                OnMoveLeft?.Invoke();
+            }
         }
-      }
-      else
-      {
-        // Swipe horizontal
-        if (dotRight > 0)
-        {
-          Debug.Log("Swipe Right");
-          OnSwipeRight?.Invoke();
-        }
-        else
-        {
-          Debug.Log("Swipe Left");
-          OnSwipeLeft?.Invoke();
-        }
-      }
     }
-
-  }
-  
 }
-

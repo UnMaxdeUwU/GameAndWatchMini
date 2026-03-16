@@ -1,9 +1,12 @@
+
 using UnityEngine;
 using System.Collections;
 
 public class MovementPlayerRunner : MonoBehaviour
 {
     private float speed = 6f;
+    private float accelerationTime = 2f;
+    private float originalSpeed;
 
     [SerializeField] private float jumpForce = 10f;
     [SerializeField] private float jumpBoostForce = 6f;
@@ -61,6 +64,10 @@ public class MovementPlayerRunner : MonoBehaviour
     [SerializeField] private AudioClip hurtSound;
     [SerializeField] private AudioClip preDeathSound;
     [SerializeField] private AudioClip fallingSound;
+    
+    
+    private Coroutine spikeCoroutine;
+    
 
     void Start()
     {
@@ -68,6 +75,7 @@ public class MovementPlayerRunner : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         LastSafePosition = transform.position;
         originalGravity =  _rb.gravityScale;
+        originalSpeed = speed;
     }
 
     private void OnEnable()
@@ -79,6 +87,8 @@ public class MovementPlayerRunner : MonoBehaviour
         HealthManagerPlayer.OnHealthChanged += OnHit;
         Slam.HasAttack += OnAttack;
         CollisionObstacle.PlayerFallInVoid += Respawn;
+        CollisionObstacle.Checkpoint += NewSafePosition;
+        CollisionObstacle.Spike += OnSpike;
         
     }
 
@@ -91,6 +101,8 @@ public class MovementPlayerRunner : MonoBehaviour
         Slam.HasAttack -= OnAttack;
         CollisionObstacle.PlayerFallInVoid -= Respawn;
         _inputManager.OnTape -= StartRun;
+        CollisionObstacle.Checkpoint -= NewSafePosition;
+        CollisionObstacle.Spike -= OnSpike;
     }
 
     private void OnAttack()
@@ -99,14 +111,32 @@ public class MovementPlayerRunner : MonoBehaviour
         if (isDashing) return;
         if (isFrozen) return;
         if (airFreezeCount >= maxAirFreezes) return;
+        if (isWaitingForTap) return;
         
         airFreezeCount++;
         StartCoroutine(FreezeAir());
     }
 
+    private void NewSafePosition()
+    {
+        LastSafePosition = transform.position;
+    }
+
+    private void OnSpike()
+    {
+        _rb.position += Vector2.left * 2f;
+
+        if (spikeCoroutine != null)
+        {
+            StopCoroutine(spikeCoroutine);
+        }
+        spikeCoroutine = StartCoroutine(SpikeCollision());
+    }
     private void Respawn()
     {
-
+        
+        MusicManager.instance.FadeOut(0.5f);
+        MusicManager.instance.UnderwaterEffect(0.4f);
         StartCoroutine(RespawnPlayer());
     }
 
@@ -116,6 +146,8 @@ public class MovementPlayerRunner : MonoBehaviour
         
         isWaitingForTap = false;
         _animator.SetBool("nothing", false);
+        MusicManager.instance.FadeIn(1f);
+        MusicManager.instance.BackToNormal(1f);
         //Debug.Log(isWaitingForTap);
     }
 
@@ -171,7 +203,7 @@ public class MovementPlayerRunner : MonoBehaviour
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         if (isGrounded)
         {
-            LastSafePosition = transform.position - _safeDistance;
+            //LastSafePosition = transform.position - _safeDistance;
             _animator.SetBool("IsFalling", false);
         }
         
@@ -191,13 +223,14 @@ public class MovementPlayerRunner : MonoBehaviour
 
     private void UpdateAnimator()
     {
-        bool isFalling = _rb.linearVelocity.y < -0.1f && !isGrounded;
+        bool isFalling = _rb.linearVelocity.y <= 0f && !isGrounded && !isGrounded && !isDashing && !isFrozen;
         _animator.SetBool("IsFalling", isFalling);
     }
 
     private void Jump()
     {
         if (!isGrounded) return;
+        if (isWaitingForTap) return;
         //Debug.Log("jump");
         SoundFXManager.instance.PlaySound(jumpSound, transform, 1f);
         jumpStartY = transform.position.y;
@@ -274,7 +307,30 @@ public class MovementPlayerRunner : MonoBehaviour
         transform.position = LastSafePosition + Vector2.up * 1.5f;
         SoundFXManager.instance.PlaySound(preDeathSound, transform, 1f);
         yield return new WaitForSeconds(0.5f);
+        
+
         isWaitingForTap = true;
+    }
+
+    private IEnumerator SpikeCollision()
+    {
+        float timer = 0f;
+
+        speed = 0f;
+
+        while (timer < accelerationTime)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / accelerationTime;
+            t = t * t; // ease acceleration
+
+            speed = Mathf.Lerp(0f, originalSpeed, t);
+
+            yield return null;
+        }
+
+        speed = originalSpeed;
     }
     
     
@@ -336,4 +392,6 @@ public class MovementPlayerRunner : MonoBehaviour
             _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, _rb.linearVelocity.y * 0.8f);
         }
     }
+    
+    
 }

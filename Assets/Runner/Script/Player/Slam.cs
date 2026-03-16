@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Slam : MonoBehaviour
@@ -10,6 +11,8 @@ public class Slam : MonoBehaviour
     [SerializeField] private float damage = 1;
 
     [SerializeField] private AudioClip[] attackSounds;
+    
+    private HashSet<HealthBox> hitTargets = new HashSet<HealthBox>();
     
     public static event Action HasAttack;
 
@@ -36,6 +39,8 @@ public class Slam : MonoBehaviour
     private void Attack()
     {
         if (!canAttack) return;
+        hitTargets.Clear();
+        
         StartCoroutine(ResetAttack());
         _animator.SetTrigger("attack");
         HasAttack?.Invoke();
@@ -57,22 +62,23 @@ public class Slam : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(!attackActive) return;
-
-        HealthBox hpbox = other.GetComponent<HealthBox>();
-        if (hpbox != null)
-        {
-            hpbox.TakeDamage(damage);
-        }
+        TryHit(other);
     }
     private void OnTriggerStay2D(Collider2D other)
     {
-        if(!attackActive) return;
+        TryHit(other);
+        
+    }
+    private void TryHit(Collider2D other)
+    {
+        if (!attackActive) return;
 
         HealthBox hpbox = other.GetComponent<HealthBox>();
-        if (hpbox != null)
+
+        if (hpbox != null && !hitTargets.Contains(hpbox))
         {
             hpbox.TakeDamage(damage);
+            hitTargets.Add(hpbox);
         }
     }
 
