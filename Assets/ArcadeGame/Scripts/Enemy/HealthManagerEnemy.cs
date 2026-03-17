@@ -13,6 +13,7 @@ public class HealthManagerEnemy : MonoBehaviour
     public void TakeDamage(float damage)
     {
         health -= damage;
+        SlowMotion.Instance.FreezeFrame(0.1f);
         if (health <= 0)
         {
             Die();

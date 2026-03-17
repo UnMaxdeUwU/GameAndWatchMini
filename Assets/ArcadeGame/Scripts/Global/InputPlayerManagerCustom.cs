@@ -1,6 +1,9 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using UnityEngine.InputSystem;
+using TouchPhase = UnityEngine.TouchPhase;
+
 //using UnityEngine.InputSystem;
 //using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 //using TouchPhase = UnityEngine.InputSystem.TouchPhase;
@@ -24,15 +27,27 @@ public class InputPlayerManagerCustom : MonoBehaviour
   
   private Vector2 startPosition;
   private Vector2 endPosition;
-  public event Action OnTape;
+  [SerializeField] private float _minimumDistance = 50f;
+  
+  private RunnerInput controls;
+  
   public event Action OnSwip;
-
-  private float _minimumDistance = 15f;
+  
+  public event Action OnTape;
+  public event Action OnSwipeDown;
+  public event Action OnSwipeUp;
+  public event Action OnSwipeLeft;
+  public event Action OnSwipeRight;
   
   
   [SerializeField] Collider2D _collider2D;
 
   //private InputAction _tapAction;
+
+  private void Awake()
+  {
+    controls = new RunnerInput();
+  }
 
   private void Start()
   {
@@ -43,8 +58,80 @@ public class InputPlayerManagerCustom : MonoBehaviour
     //_tapAction = InputSystem.actions.FindAction("Tap");
   }
 
+  private void OnEnable()
+  {
+    controls.Enable();
+    controls.Arcade.TouchPress.started += StartTouch;
+    controls.Arcade.TouchPress.canceled += EndTouch;
+  }
 
-  public void OnTap()
+  private void OnDisable()
+  {
+    controls.Arcade.TouchPress.started -= StartTouch;
+    controls.Arcade.TouchPress.canceled -= EndTouch;
+    
+    controls.Disable();
+  }
+  
+  private void StartTouch(InputAction.CallbackContext ctx)
+  {
+    startPosition = controls.Arcade.TouchPosition.ReadValue<Vector2>();
+  }
+
+  private void EndTouch(InputAction.CallbackContext ctx)
+  {
+    endPosition = controls.Arcade.TouchPosition.ReadValue<Vector2>();
+
+    DetectSwipe();
+  }
+  
+  private void DetectSwipe()
+  {
+    Vector2 delta = endPosition - startPosition;
+
+    if (delta.magnitude < _minimumDistance)
+    {
+      OnTape?.Invoke();
+      if (startPosition.x < Screen.width / 2f)
+      {
+        OnMoveLeft?.Invoke();
+      }
+      else
+      {
+        OnMoveRight?.Invoke();
+      }
+      return;
+    }
+
+    delta.Normalize();
+
+    float dotUp = Vector2.Dot(delta, Vector2.up);
+    float dotRight = Vector2.Dot(delta, Vector2.right);
+
+    if (Mathf.Abs(dotUp) > Mathf.Abs(dotRight))
+    {
+      if (dotUp > 0)
+        OnSwipeUp?.Invoke();
+      else
+        OnSwipeDown?.Invoke();
+    }
+    else
+    {
+      if (dotRight > 0)
+      {
+        OnSwipeRight?.Invoke();
+        OnMoveRight?.Invoke();
+      }
+      else
+      {
+        OnSwipeLeft?.Invoke();
+        OnMoveLeft?.Invoke();
+      }
+    }
+  }
+
+
+  /*public void OnTap()
   {
     Debug.Log("OnTap");
     OnTape?.Invoke();
@@ -53,20 +140,6 @@ public class InputPlayerManagerCustom : MonoBehaviour
 
   private void Update()
   {
-    /*if (Touch.activeTouches.Count <= 0)
-    {
-      return;
-    }
-    Touch touch = _tapAction.ReadValue<Touch>();
-    if (touch.phase == TouchPhase.Began)
-    {
-      startPosition = touch.screenPosition;
-    }
-    else if (touch.phase == TouchPhase.Moved)
-    {
-      endPosition = touch.screenPosition;
-      OnSwipe();
-    }*/
     
     if (Input.touchCount > 0)
     {
@@ -163,7 +236,7 @@ public class InputPlayerManagerCustom : MonoBehaviour
         MoveRight();
       }
     }
-  }*/
+  }#1#
   public void OnSwipe()
   {
     if (Vector2.Distance(startPosition, endPosition) > _minimumDistance)
@@ -189,7 +262,7 @@ public class InputPlayerManagerCustom : MonoBehaviour
       
       }
     }
-  }
+  }*/
 
 }
          

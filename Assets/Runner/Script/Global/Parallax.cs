@@ -3,7 +3,7 @@ using UnityEngine;
 public class Parallax : MonoBehaviour
 {
     private float length, startPos;
-    public GameObject camera;
+    public GameObject cameraRoot; // ← assigner le CameraRoot, pas la Camera
     public float parallaxEffect;
 
     void Start()
@@ -14,8 +14,8 @@ public class Parallax : MonoBehaviour
 
     void Update()
     {
-        float temp = camera.transform.position.x * (1 - parallaxEffect);
-        float distance = camera.transform.position.x * parallaxEffect;
+        float temp = cameraRoot.transform.position.x * (1 - parallaxEffect);
+        float distance = cameraRoot.transform.position.x * parallaxEffect;
 
         transform.position = new Vector3(startPos + distance, transform.position.y, transform.position.z);
 

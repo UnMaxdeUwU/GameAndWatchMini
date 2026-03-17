@@ -15,12 +15,12 @@ public class Parry : MonoBehaviour
 
     private void OnEnable()
     {
-        inputPlayerManager.OnSwip += TriggerParry;
+        inputPlayerManager.OnSwipeDown += TriggerParry;
     }
 
     private void OnDisable()
     {
-        inputPlayerManager.OnSwip -= TriggerParry;
+        inputPlayerManager.OnSwipeDown -= TriggerParry;
     }
 
     private void TriggerParry()

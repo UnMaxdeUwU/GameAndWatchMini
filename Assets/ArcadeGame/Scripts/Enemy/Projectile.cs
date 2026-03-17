@@ -33,7 +33,7 @@ public class Projectile : MonoBehaviour
         {
             Debug.Log("PARRY SUCCESS");
             _animator.SetTrigger("Hit"); // anim ennemi stun 
-            slowMotion.StartSlowMotion(0.25f);
+            
             HasParry?.Invoke(_target);
 
         }

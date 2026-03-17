@@ -104,6 +104,7 @@ public class SwordPlayer : MonoBehaviour
             animationSpeed += 0.1f;
             animationSpeed = Mathf.Clamp(animationSpeed, 1f, 2.5f);
             animator.SetFloat("Speed", animationSpeed );
+
             
             
             UpCombo(); //ajout combo si enemy touché

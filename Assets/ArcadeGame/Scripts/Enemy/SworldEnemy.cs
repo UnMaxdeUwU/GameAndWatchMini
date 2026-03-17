@@ -37,8 +37,7 @@ public class SworldEnemy : MonoBehaviour
         {
             Debug.Log("PARRY SUCCESS");
             _animator.SetTrigger("Hit"); // anim ennemi stun par exemple
-            slowMotion.StartSlowMotion(0.25f);
-            HasParry?.Invoke(_counterPosition);
+            //HasParry?.Invoke(_counterPosition);
         }
         
         if (Hmp != null)
@@ -65,7 +64,7 @@ public class SworldEnemy : MonoBehaviour
 
         _animator.SetTrigger("Attack");
         StartCoroutine(AttackRoutine());
-        Debug.Log("Attaque!!!!!");
+        //Debug.Log("Attaque!!!!!");
 
     }
 
@@ -73,6 +72,7 @@ public class SworldEnemy : MonoBehaviour
     {
         canAttack = false;
         //collider.enabled = true;
+
 
         yield return new WaitForSeconds(0.1f); 
 

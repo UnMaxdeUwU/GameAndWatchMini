@@ -685,7 +685,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a166c785caea726468754326de1b5581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Parallax
-  camera: {fileID: 1523361359}
+  cameraRoot: {fileID: 1523361359}
   parallaxEffect: 0.6
 --- !u!1 &146515883
 GameObject:
@@ -1215,6 +1215,10 @@ PrefabInstance:
     - target: {fileID: 5560997163823051770, guid: 1577dab8909be834489f49be5bc1ae08, type: 3}
       propertyPath: m_Layer
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7133495133439735982, guid: 1577dab8909be834489f49be5bc1ae08, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -2.0999756
       objectReference: {fileID: 0}
     - target: {fileID: 7970010924211993599, guid: 1577dab8909be834489f49be5bc1ae08, type: 3}
       propertyPath: m_Camera
@@ -2130,6 +2134,7 @@ GameObject:
   - component: {fileID: 417489654}
   - component: {fileID: 417489653}
   - component: {fileID: 417489652}
+  - component: {fileID: 417489656}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -2246,6 +2251,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1431510648}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &417489656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 417489651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2d8fc9b7e57e5d4cb41d6add983efb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShake
+  ShakeAmount: 0.09
+  CanShake: 0
+  ShakeDuration: 0
 --- !u!4 &475721278 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5627906841749523100, guid: 2a49ce3167082de429702ffb18499339, type: 3}
@@ -3156,6 +3176,7 @@ GameObject:
   m_Component:
   - component: {fileID: 635510496}
   - component: {fileID: 635510497}
+  - component: {fileID: 635510498}
   m_Layer: 0
   m_Name: Obstacle
   m_TagString: Untagged
@@ -3221,6 +3242,21 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &635510498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 635510495}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2d8fc9b7e57e5d4cb41d6add983efb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShake
+  ShakeAmount: 0.09
+  CanShake: 0
+  ShakeDuration: 0
 --- !u!1 &650963594
 GameObject:
   m_ObjectHideFlags: 0
@@ -27635,6 +27671,7 @@ GameObject:
   m_Component:
   - component: {fileID: 746760086}
   - component: {fileID: 746760085}
+  - component: {fileID: 746760087}
   m_Layer: 0
   m_Name: Obstacle (1)
   m_TagString: Untagged
@@ -27700,6 +27737,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1431510648}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &746760087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746760084}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2d8fc9b7e57e5d4cb41d6add983efb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShake
+  ShakeAmount: 0.09
+  CanShake: 0
+  ShakeDuration: 0
 --- !u!1 &777259889
 GameObject:
   m_ObjectHideFlags: 0
@@ -28625,6 +28677,46 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
+  - first: {x: 336, y: -19, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 21
+      m_TileSpriteIndex: 25
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
+  - first: {x: 344, y: -19, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 21
+      m_TileSpriteIndex: 25
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
+  - first: {x: 354, y: -19, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 21
+      m_TileSpriteIndex: 25
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
+  - first: {x: 363, y: -19, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 21
+      m_TileSpriteIndex: 25
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
   - first: {x: 308, y: -18, z: 0}
     second:
       serializedVersion: 2
@@ -28650,6 +28742,16 @@ Tilemap:
       serializedVersion: 2
       m_TileIndex: 26
       m_TileSpriteIndex: 14
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
+  - first: {x: 311, y: -18, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 38
+      m_TileSpriteIndex: 38
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -29130,6 +29232,16 @@ Tilemap:
       serializedVersion: 2
       m_TileIndex: 11
       m_TileSpriteIndex: 11
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
+  - first: {x: 292, y: -12, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 38
+      m_TileSpriteIndex: 38
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -30925,11 +31037,31 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
+  - first: {x: 31, y: -5, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 21
+      m_TileSpriteIndex: 25
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
   - first: {x: 63, y: -5, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 28
       m_TileSpriteIndex: 20
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
+  - first: {x: 120, y: -5, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 21
+      m_TileSpriteIndex: 25
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -31189,7 +31321,7 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: 5a344a408515263449ebe8470da0f412, type: 2}
   - m_RefCount: 2
     m_Data: {fileID: 11400000, guid: ef130d6e78d987b4ab529d1810d96079, type: 2}
-  - m_RefCount: 7
+  - m_RefCount: 13
     m_Data: {fileID: 11400000, guid: 0d43ba4f8e795aa4b8c01e3bc821cad0, type: 2}
   - m_RefCount: 12
     m_Data: {fileID: 11400000, guid: 36c8bd766154e874ab19479f53519923, type: 2}
@@ -31223,6 +31355,8 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: d9d5cf8906083f04eb24013e577ee65d, type: 2}
   - m_RefCount: 1
     m_Data: {fileID: 11400000, guid: 036bc4796d3d93c419bd6172d3b0c788, type: 2}
+  - m_RefCount: 2
+    m_Data: {fileID: 11400000, guid: f2ad9dd5b6ec27940ad3d7c6f357dae7, type: 2}
   m_TileSpriteArray:
   - m_RefCount: 13
     m_Data: {fileID: -716952794829026261, guid: 549fee09781c2d74baee70cd4a00f153, type: 3}
@@ -31274,7 +31408,7 @@ Tilemap:
     m_Data: {fileID: -7326330765846486680, guid: 549fee09781c2d74baee70cd4a00f153, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: -8931170882956590797, guid: 549fee09781c2d74baee70cd4a00f153, type: 3}
-  - m_RefCount: 7
+  - m_RefCount: 13
     m_Data: {fileID: 2370382069461181947, guid: 549fee09781c2d74baee70cd4a00f153, type: 3}
   - m_RefCount: 3
     m_Data: {fileID: 2398694386035660818, guid: 549fee09781c2d74baee70cd4a00f153, type: 3}
@@ -31300,8 +31434,10 @@ Tilemap:
     m_Data: {fileID: 6778405368036279163, guid: 549fee09781c2d74baee70cd4a00f153, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 6074651378490148917, guid: 549fee09781c2d74baee70cd4a00f153, type: 3}
+  - m_RefCount: 2
+    m_Data: {fileID: -8377130690987618698, guid: 549fee09781c2d74baee70cd4a00f153, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 277
+  - m_RefCount: 285
     m_Data:
       e00: 1
       e01: 0
@@ -31320,7 +31456,7 @@ Tilemap:
       e32: 0
       e33: 1
   m_TileColorArray:
-  - m_RefCount: 277
+  - m_RefCount: 285
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
@@ -32163,7 +32299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a166c785caea726468754326de1b5581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Parallax
-  camera: {fileID: 1523361359}
+  cameraRoot: {fileID: 1523361359}
   parallaxEffect: 0.9
 --- !u!1001 &1043494968
 PrefabInstance:
@@ -32340,7 +32476,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a166c785caea726468754326de1b5581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Parallax
-  camera: {fileID: 1523361359}
+  cameraRoot: {fileID: 1523361359}
   parallaxEffect: 0.7
 --- !u!1 &1050121693
 GameObject:
@@ -32448,7 +32584,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a166c785caea726468754326de1b5581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Parallax
-  camera: {fileID: 1523361359}
+  cameraRoot: {fileID: 1523361359}
   parallaxEffect: 0.1
 --- !u!1 &1050489349
 GameObject:
@@ -33057,6 +33193,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1176931046}
   - component: {fileID: 1176931045}
+  - component: {fileID: 1176931047}
   m_Layer: 0
   m_Name: Obstacle (4)
   m_TagString: Untagged
@@ -33122,6 +33259,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1431510648}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1176931047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1176931044}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2d8fc9b7e57e5d4cb41d6add983efb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShake
+  ShakeAmount: 0.09
+  CanShake: 0
+  ShakeDuration: 0
 --- !u!1001 &1179690824
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33297,7 +33449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a166c785caea726468754326de1b5581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Parallax
-  camera: {fileID: 1523361359}
+  cameraRoot: {fileID: 1523361359}
   parallaxEffect: 0.2
 --- !u!1001 &1215591841
 PrefabInstance:
@@ -33602,7 +33754,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a166c785caea726468754326de1b5581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Parallax
-  camera: {fileID: 1523361359}
+  cameraRoot: {fileID: 1523361359}
   parallaxEffect: 0.3
 --- !u!1001 &1246084699
 PrefabInstance:
@@ -33683,6 +33835,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1249517517}
   - component: {fileID: 1249517516}
+  - component: {fileID: 1249517518}
   m_Layer: 0
   m_Name: Obstacle (2)
   m_TagString: Untagged
@@ -33748,6 +33901,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1431510648}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1249517518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249517515}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2d8fc9b7e57e5d4cb41d6add983efb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShake
+  ShakeAmount: 0.09
+  CanShake: 0
+  ShakeDuration: 0
 --- !u!1001 &1260134424
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33976,7 +34144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a166c785caea726468754326de1b5581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Parallax
-  camera: {fileID: 1523361359}
+  cameraRoot: {fileID: 1523361359}
   parallaxEffect: 0
 --- !u!1 &1332100958
 GameObject:
@@ -34212,7 +34380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a166c785caea726468754326de1b5581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Parallax
-  camera: {fileID: 1523361359}
+  cameraRoot: {fileID: 1523361359}
   parallaxEffect: 0.5
 --- !u!1 &1377009752
 GameObject:
@@ -35237,6 +35405,7 @@ GameObject:
   - component: {fileID: 1523361360}
   - component: {fileID: 1523361363}
   - component: {fileID: 1523361364}
+  - component: {fileID: 1523361365}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -35397,6 +35566,21 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 11400000, guid: 117cd4fd197d1fc4e973bdaf207e7daf, type: 2}
+--- !u!114 &1523361365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523361359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2d8fc9b7e57e5d4cb41d6add983efb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShake
+  ShakeAmount: 0.09
+  CanShake: 0
+  ShakeDuration: 0
 --- !u!4 &1525211446 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5627906841749523100, guid: 2a49ce3167082de429702ffb18499339, type: 3}
@@ -36426,6 +36610,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1711508692}
   - component: {fileID: 1711508691}
+  - component: {fileID: 1711508693}
   m_Layer: 0
   m_Name: Obstacle (5)
   m_TagString: Untagged
@@ -36491,6 +36676,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1431510648}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1711508693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1711508690}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2d8fc9b7e57e5d4cb41d6add983efb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShake
+  ShakeAmount: 0.09
+  CanShake: 0
+  ShakeDuration: 0
 --- !u!1001 &1713609369
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -36662,6 +36862,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1741734860}
   - component: {fileID: 1741734859}
+  - component: {fileID: 1741734861}
   m_Layer: 0
   m_Name: Obstacle (3)
   m_TagString: Untagged
@@ -36727,6 +36928,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1431510648}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1741734861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1741734858}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2d8fc9b7e57e5d4cb41d6add983efb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShake
+  ShakeAmount: 0.09
+  CanShake: 0
+  ShakeDuration: 0
 --- !u!4 &1744100389 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7004692863465011557, guid: ee2fa37da4e82de46ba20cb6919c3dac, type: 3}
@@ -37665,7 +37881,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a166c785caea726468754326de1b5581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Parallax
-  camera: {fileID: 1523361359}
+  cameraRoot: {fileID: 1523361359}
   parallaxEffect: 0
 --- !u!1 &1946921060
 GameObject:

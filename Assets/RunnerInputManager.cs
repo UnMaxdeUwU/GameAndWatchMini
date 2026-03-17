@@ -175,6 +175,94 @@ public partial class @RunnerInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Arcade"",
+            ""id"": ""abf64bf7-8b88-4aff-9489-1df3c00a6cc4"",
+            ""actions"": [
+                {
+                    ""name"": ""Tap"",
+                    ""type"": ""Button"",
+                    ""id"": ""41460836-6575-4ee5-b70c-e72a7d7a021b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TouchPress"",
+                    ""type"": ""Button"",
+                    ""id"": ""db530748-b94c-4ee3-a6db-82cf9b44fe20"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""TouchPosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""c1eee42a-048c-4c30-80af-fd5755e3e8e9"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""TouchDelta"",
+                    ""type"": ""Value"",
+                    ""id"": ""1c1d2649-b235-440c-b69e-5267638ab222"",
+                    ""expectedControlType"": ""Delta"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""de77350e-c85c-4e5e-8c1a-f5a94109646c"",
+                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Tap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d5eb1c73-447a-42a4-a296-e6249293dddf"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TouchPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0ee3d2f9-aeb7-4a69-b6cf-c2f11975426e"",
+                    ""path"": ""<Touchscreen>/primaryTouch/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TouchPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6ae75cec-a86d-4b19-99f5-76e8a4449362"",
+                    ""path"": ""<Touchscreen>/primaryTouch/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TouchDelta"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -185,11 +273,18 @@ public partial class @RunnerInput: IInputActionCollection2, IDisposable
         m_Gameplay_TouchPress = m_Gameplay.FindAction("TouchPress", throwIfNotFound: true);
         m_Gameplay_TouchPosition = m_Gameplay.FindAction("TouchPosition", throwIfNotFound: true);
         m_Gameplay_TouchDelta = m_Gameplay.FindAction("TouchDelta", throwIfNotFound: true);
+        // Arcade
+        m_Arcade = asset.FindActionMap("Arcade", throwIfNotFound: true);
+        m_Arcade_Tap = m_Arcade.FindAction("Tap", throwIfNotFound: true);
+        m_Arcade_TouchPress = m_Arcade.FindAction("TouchPress", throwIfNotFound: true);
+        m_Arcade_TouchPosition = m_Arcade.FindAction("TouchPosition", throwIfNotFound: true);
+        m_Arcade_TouchDelta = m_Arcade.FindAction("TouchDelta", throwIfNotFound: true);
     }
 
     ~@RunnerInput()
     {
         UnityEngine.Debug.Assert(!m_Gameplay.enabled, "This will cause a leak and performance issues, RunnerInput.Gameplay.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Arcade.enabled, "This will cause a leak and performance issues, RunnerInput.Arcade.Disable() has not been called.");
     }
 
     /// <summary>
@@ -390,12 +485,177 @@ public partial class @RunnerInput: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="GameplayActions" /> instance referencing this action map.
     /// </summary>
     public GameplayActions @Gameplay => new GameplayActions(this);
+
+    // Arcade
+    private readonly InputActionMap m_Arcade;
+    private List<IArcadeActions> m_ArcadeActionsCallbackInterfaces = new List<IArcadeActions>();
+    private readonly InputAction m_Arcade_Tap;
+    private readonly InputAction m_Arcade_TouchPress;
+    private readonly InputAction m_Arcade_TouchPosition;
+    private readonly InputAction m_Arcade_TouchDelta;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Arcade".
+    /// </summary>
+    public struct ArcadeActions
+    {
+        private @RunnerInput m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public ArcadeActions(@RunnerInput wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Arcade/Tap".
+        /// </summary>
+        public InputAction @Tap => m_Wrapper.m_Arcade_Tap;
+        /// <summary>
+        /// Provides access to the underlying input action "Arcade/TouchPress".
+        /// </summary>
+        public InputAction @TouchPress => m_Wrapper.m_Arcade_TouchPress;
+        /// <summary>
+        /// Provides access to the underlying input action "Arcade/TouchPosition".
+        /// </summary>
+        public InputAction @TouchPosition => m_Wrapper.m_Arcade_TouchPosition;
+        /// <summary>
+        /// Provides access to the underlying input action "Arcade/TouchDelta".
+        /// </summary>
+        public InputAction @TouchDelta => m_Wrapper.m_Arcade_TouchDelta;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Arcade; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="ArcadeActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(ArcadeActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="ArcadeActions" />
+        public void AddCallbacks(IArcadeActions instance)
+        {
+            if (instance == null || m_Wrapper.m_ArcadeActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_ArcadeActionsCallbackInterfaces.Add(instance);
+            @Tap.started += instance.OnTap;
+            @Tap.performed += instance.OnTap;
+            @Tap.canceled += instance.OnTap;
+            @TouchPress.started += instance.OnTouchPress;
+            @TouchPress.performed += instance.OnTouchPress;
+            @TouchPress.canceled += instance.OnTouchPress;
+            @TouchPosition.started += instance.OnTouchPosition;
+            @TouchPosition.performed += instance.OnTouchPosition;
+            @TouchPosition.canceled += instance.OnTouchPosition;
+            @TouchDelta.started += instance.OnTouchDelta;
+            @TouchDelta.performed += instance.OnTouchDelta;
+            @TouchDelta.canceled += instance.OnTouchDelta;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="ArcadeActions" />
+        private void UnregisterCallbacks(IArcadeActions instance)
+        {
+            @Tap.started -= instance.OnTap;
+            @Tap.performed -= instance.OnTap;
+            @Tap.canceled -= instance.OnTap;
+            @TouchPress.started -= instance.OnTouchPress;
+            @TouchPress.performed -= instance.OnTouchPress;
+            @TouchPress.canceled -= instance.OnTouchPress;
+            @TouchPosition.started -= instance.OnTouchPosition;
+            @TouchPosition.performed -= instance.OnTouchPosition;
+            @TouchPosition.canceled -= instance.OnTouchPosition;
+            @TouchDelta.started -= instance.OnTouchDelta;
+            @TouchDelta.performed -= instance.OnTouchDelta;
+            @TouchDelta.canceled -= instance.OnTouchDelta;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="ArcadeActions.UnregisterCallbacks(IArcadeActions)" />.
+        /// </summary>
+        /// <seealso cref="ArcadeActions.UnregisterCallbacks(IArcadeActions)" />
+        public void RemoveCallbacks(IArcadeActions instance)
+        {
+            if (m_Wrapper.m_ArcadeActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="ArcadeActions.AddCallbacks(IArcadeActions)" />
+        /// <seealso cref="ArcadeActions.RemoveCallbacks(IArcadeActions)" />
+        /// <seealso cref="ArcadeActions.UnregisterCallbacks(IArcadeActions)" />
+        public void SetCallbacks(IArcadeActions instance)
+        {
+            foreach (var item in m_Wrapper.m_ArcadeActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_ArcadeActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="ArcadeActions" /> instance referencing this action map.
+    /// </summary>
+    public ArcadeActions @Arcade => new ArcadeActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Gameplay" which allows adding and removing callbacks.
     /// </summary>
     /// <seealso cref="GameplayActions.AddCallbacks(IGameplayActions)" />
     /// <seealso cref="GameplayActions.RemoveCallbacks(IGameplayActions)" />
     public interface IGameplayActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Tap" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnTap(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "TouchPress" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnTouchPress(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "TouchPosition" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnTouchPosition(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "TouchDelta" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnTouchDelta(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Arcade" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="ArcadeActions.AddCallbacks(IArcadeActions)" />
+    /// <seealso cref="ArcadeActions.RemoveCallbacks(IArcadeActions)" />
+    public interface IArcadeActions
     {
         /// <summary>
         /// Method invoked when associated input action "Tap" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
