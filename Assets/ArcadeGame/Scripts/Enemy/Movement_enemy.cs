@@ -20,6 +20,7 @@ public class Movement_enemy : MonoBehaviour
     [SerializeField] private LayerMask Enemy;
 
     private bool CanMove = true;
+    
     public event Action Ataque;
     
     private Animator _animator;

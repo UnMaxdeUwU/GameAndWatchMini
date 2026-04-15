@@ -31,15 +31,24 @@ public class ProjectilePlayer : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         HealthManagerEnemy Hme = other.GetComponent<HealthManagerEnemy>();
+        HealthManagerBoss Hme2 = other.GetComponent<HealthManagerBoss>();
         if (Hme != null)
         {
             Hme.TakeDamage(1f);
+
             Debug.Log("Enemy hit by projectile");
             Debug.Log("Enemy hit by projectile");
             HitStop.Instance?.Stop(feedbackConfig.hitStopDuration);
             CameraShake.Instance?.Shake(feedbackConfig.hitShakeDuration, feedbackConfig.hitShakeMagnitude);
 
 
+        }
+
+        if (Hme2 != null)
+        {
+            Hme2.TakeDamage(1f);
+            HitStop.Instance?.Stop(feedbackConfig.hitStopDuration);
+            CameraShake.Instance?.Shake(feedbackConfig.hitShakeDuration, feedbackConfig.hitShakeMagnitude);
         }
 
     }

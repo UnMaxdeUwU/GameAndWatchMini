@@ -3,16 +3,16 @@ using UnityEngine;
 using System.Collections;
 public class Enemy_Distance : MonoBehaviour
 {
-    [SerializeField] private Movement_enemy _enemy;
+    [SerializeField] private Movement_Boss _enemy;
+    [SerializeField] private Collider2D _collider2D;
     private SwordPlayer player;
     
     private SlowMotion slowMotion;
-    private Collider2D _collider;
     private bool canAttack = true;
     private Animator _animator;
 
     private float _cooldown = 3.0f;
-
+    
 
     [SerializeField] private Transform _ProjectileSpawnPoint;
 
@@ -22,7 +22,6 @@ public class Enemy_Distance : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _collider = GetComponent<Collider2D>();
         _animator = GetComponent<Animator>();
         slowMotion = FindObjectOfType<SlowMotion>();
     }
@@ -65,6 +64,17 @@ public class Enemy_Distance : MonoBehaviour
     public void SpawnProjectile()
     {
         Instantiate(_projectile, _ProjectileSpawnPoint.position, _ProjectileSpawnPoint.rotation);
+    }
+
+
+    private void ActivateCollision2D()
+    {
+        _collider2D.enabled = true;
+    }
+
+    private void DesactiveCollider2D()
+    {
+        _collider2D.enabled = false;
     }
 
     /*
