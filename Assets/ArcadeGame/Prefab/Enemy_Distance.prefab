@@ -39,6 +39,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -1185548298185881272, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+      propertyPath: feedbackConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: 7077cf6bb584a3b4494df0a27d1733d0, type: 2}
     - target: {fileID: 1809287281526712338, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
       propertyPath: m_LocalScale.x
       value: 9
@@ -91,9 +95,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2120690535776299303, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+      propertyPath: m_Size.y
+      value: 0.14782329
+      objectReference: {fileID: 0}
+    - target: {fileID: 2120690535776299303, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.0014744417
+      objectReference: {fileID: 0}
+    - target: {fileID: 2120690535776299303, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.008606103
+      objectReference: {fileID: 0}
     - target: {fileID: 2324945766742027975, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
       propertyPath: m_Name
       value: Enemy_Distance
+      objectReference: {fileID: 0}
+    - target: {fileID: 5821251607887559882, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+      propertyPath: 'behavioursToDisableDuringStun.Array.data[0]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6628986363522254892, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+      propertyPath: distanceBetweenPlayer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7889878613504501995, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
@@ -109,11 +133,19 @@ PrefabInstance:
       objectReference: {fileID: 4723107735738678597, guid: f4a4a080e74460d4187729f472e5bb91, type: 3}
     - target: {fileID: 7934087782105514783, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
       propertyPath: m_SortingLayer
-      value: 5
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7934087782105514783, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7934087782105514783, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
       propertyPath: m_SortingLayerID
       value: -1353093697
+      objectReference: {fileID: 0}
+    - target: {fileID: 8707919163372595240, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+      propertyPath: m_BodyType
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8933144587625201400, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
       propertyPath: m_Controller
@@ -126,10 +158,44 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1809287281526712338, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8877290625440489561}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2324945766742027975, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4601405211121782743}
   m_SourcePrefab: {fileID: 100100000, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+--- !u!114 &1722293920938646163 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6628986363522254892, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+  m_PrefabInstance: {fileID: 5483188397658591935}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7808097233966939256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cfe573cc311a8f48a1af76a0d80a8ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Movement_enemy
 --- !u!4 &6125972987623766701 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1809287281526712338, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
   m_PrefabInstance: {fileID: 5483188397658591935}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7808097233966939256 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2324945766742027975, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+  m_PrefabInstance: {fileID: 5483188397658591935}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4601405211121782743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7808097233966939256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7004aacc115e78c44b207414e9795ecb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy_Distance
+  _enemy: {fileID: 1722293920938646163}
+  _ProjectileSpawnPoint: {fileID: 8877290625440489561}
+  _projectile: {fileID: 1698775092601053955, guid: a8c9de9d55b8b2344a5bce822a131d35, type: 3}

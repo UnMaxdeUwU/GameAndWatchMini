@@ -14,6 +14,7 @@ public class Movement_enemy : MonoBehaviour
     
     
     [SerializeField] float distanceBetweenPlayer = 2.0f;
+    [SerializeField] private float coldownAttack = 4f;
 
     private float enemyDetectDistance = 5.0f;
     [SerializeField] private LayerMask Enemy;
@@ -101,7 +102,7 @@ public class Movement_enemy : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(4f);
+            yield return new WaitForSeconds(coldownAttack);
             Ataque?.Invoke();
         }
 

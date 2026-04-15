@@ -1,51 +1,67 @@
-using System;
 using System.Collections;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
+/// <summary>
+/// Singleton attaché à la caméra principale.
+/// Appelle CameraShake.Instance.Shake(duration, magnitude) depuis n'importe quel système.
+/// Les shakes s'additionnent : plusieurs appels simultanés fusionnent en gardant le plus fort.
+/// </summary>
 public class CameraShake : MonoBehaviour
 {
-    [SerializeField] private float ShakeAmount = 0.09f;
-    private Vector2 InitialPosition;
-    public bool CanShake = false;
-    [SerializeField] private float ShakeDuration;
+    public static CameraShake Instance { get; private set; }
 
+    private Vector3 _originalLocalPos;
+    private Coroutine _shakeRoutine;
+    private float _remainingDuration;
+    private float _currentMagnitude;
 
-    private void OnEnable()
+    private void Awake()
     {
-        HealthManagerPlayer.OnHealthChanged += StartCameraShake;
+        if (Instance != null && Instance != this) { Destroy(this); return; }
+        Instance = this;
+        _originalLocalPos = transform.localPosition;
     }
 
-    private void OnDisable()
+    /// <summary>
+    /// Lance un shake de caméra. Si un shake est déjà actif, on garde le plus intense.
+    /// </summary>
+    public void Shake(float duration, float magnitude)
     {
-        HealthManagerPlayer.OnHealthChanged -= StartCameraShake;
-    }
+        if (duration <= 0f || magnitude <= 0f) return;
 
-    private void StartCameraShake()
-    {
-        StartCoroutine(CameraShaking());
-    }
-
-    private IEnumerator CameraShaking()
-    {
-        CanShake = true;
-        yield return new WaitForSeconds(ShakeDuration);
-        CanShake = false;
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        InitialPosition = transform.position;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (CanShake)
+        // Si un shake plus faible est déjà actif, on le remplace
+        if (_shakeRoutine != null)
         {
-            transform.position = InitialPosition + Random.insideUnitCircle * ShakeAmount;
+            if (magnitude <= _currentMagnitude && duration <= _remainingDuration) return;
+            StopCoroutine(_shakeRoutine);
         }
 
+        _shakeRoutine = StartCoroutine(ShakeRoutine(duration, magnitude));
+    }
+
+    private IEnumerator ShakeRoutine(float duration, float magnitude)
+    {
+        _currentMagnitude = magnitude;
+        _remainingDuration = duration;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            _remainingDuration = duration - elapsed;
+
+            // Atténuation progressive sur la fin du shake
+            float progress = elapsed / duration;
+            float dampedMagnitude = magnitude * (1f - Mathf.SmoothStep(0f, 1f, progress));
+
+            transform.localPosition = _originalLocalPos + (Vector3)Random.insideUnitCircle * dampedMagnitude;
+
+            yield return null;
+        }
+
+        transform.localPosition = _originalLocalPos;
+        _shakeRoutine = null;
+        _currentMagnitude = 0f;
+        _remainingDuration = 0f;
     }
 }

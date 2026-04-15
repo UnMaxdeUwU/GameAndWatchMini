@@ -5,7 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     
-    private Animator _animator;
+
     private SwordPlayer player;
     
     private SlowMotion slowMotion;
@@ -31,10 +31,10 @@ public class Projectile : MonoBehaviour
             
         if (parry != null && parry.ParryActive)
         {
-            Debug.Log("PARRY SUCCESS");
-            _animator.SetTrigger("Hit"); // anim ennemi stun 
+            Debug.Log("PARRY SUCCESS Projectile");
             
             HasParry?.Invoke(_target);
+            Destroy();
 
         }
             

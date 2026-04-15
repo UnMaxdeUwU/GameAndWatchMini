@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 6162170890820138797}
   - component: {fileID: 8819048197922950070}
   - component: {fileID: 1335273450467883130}
-  - component: {fileID: 7236042982637936808}
+  - component: {fileID: 8722044547613420448}
   m_Layer: 0
-  m_Name: Projectile Enemy
+  m_Name: ProjectilePlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,7 +46,7 @@ Animator:
   m_GameObject: {fileID: 1698775092601053955}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 99774a16caf6a0e4a9d94a6cff4acebc, type: 2}
+  m_Controller: {fileID: 9100000, guid: ee5825ba9dc85204d89dd0511b8ac4f0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -109,7 +109,7 @@ SpriteRenderer:
   m_MaskInteraction: 0
   m_Sprite: {fileID: -1395330509, guid: 4e18079a60f843b4696b06bb24931e32, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1.83, y: 0.16}
@@ -178,7 +178,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.89875317, y: 0}
+  m_Offset: {x: -0.88336545, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0.5}
@@ -188,9 +188,9 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.8245692, y: 0.16}
+  m_Size: {x: 1.7778383, y: 0.16}
   m_EdgeRadius: 0
---- !u!114 &7236042982637936808
+--- !u!114 &8722044547613420448
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -199,6 +199,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 1698775092601053955}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff3d528935583744797301165f67fb69, type: 3}
+  m_Script: {fileID: 11500000, guid: 71d8d37b959a66f4f9118771332301c4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Projectile
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectilePlayer
+  feedbackConfig: {fileID: 11400000, guid: 7077cf6bb584a3b4494df0a27d1733d0, type: 2}
+  slowMotionTime: 0

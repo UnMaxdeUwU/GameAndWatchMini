@@ -6,23 +6,28 @@ public class SwordPlayer : MonoBehaviour
 {
     [SerializeField] private Collider2D col;
     [SerializeField] private InputPlayerManagerCustom inputManager;
-
-    
+    [SerializeField] private GameObject Projectile;
 
     [SerializeField] private float baseCooldown = 1.5f;
     [SerializeField] private float minCooldown = 0.1f;
     [SerializeField] private float comboGain = 0.4f;
 
+    // ── Feedback ────────────────────────────────────────────────────────────
+    [SerializeField] private FeedbackConfig feedbackConfig;
+    // ────────────────────────────────────────────────────────────────────────
+
     private float currentCooldown;
     private bool canAttack = true;
     private float animationSpeed = 1f;
-    
+
     private Animator animator;
-    
+
     public event Action AddCombo;
 
+    [SerializeField] private Transform SpawnPointProjectile;
     private Vector3 StartPosition;
     private Vector3 _counterPosition;
+    
 
     private float _damage = 1f;
 
@@ -43,14 +48,13 @@ public class SwordPlayer : MonoBehaviour
     private void OnDisable()
     {
         inputManager.OnTape -= Attack;
-
     }
-    
+
     public void RegisterEnemy(SworldEnemy enemy)
     {
         enemy.HasParry += Counter;
     }
-    
+
     public void UnregisterEnemy(SworldEnemy enemy)
     {
         enemy.HasParry -= Counter;
@@ -65,9 +69,6 @@ public class SwordPlayer : MonoBehaviour
     {
         projectile.HasParry -= CounterProjectile;
     }
-    
-    
-    
 
     private void Attack()
     {
@@ -81,11 +82,9 @@ public class SwordPlayer : MonoBehaviour
     IEnumerator AttackRoutine()
     {
         canAttack = false;
-        //col.enabled = true;
 
-        yield return new WaitForSeconds(0.1f); 
+        yield return new WaitForSeconds(0.1f);
 
-        //col.enabled = false;
         yield return new WaitForSeconds(currentCooldown);
 
         canAttack = true;
@@ -98,18 +97,29 @@ public class SwordPlayer : MonoBehaviour
         if (healthManager != null)
         {
             healthManager.TakeDamage(_damage);
-            
+
             currentCooldown -= comboGain;
             currentCooldown = Mathf.Clamp(currentCooldown, minCooldown, baseCooldown);
             animationSpeed += 0.1f;
             animationSpeed = Mathf.Clamp(animationSpeed, 1f, 2.5f);
-            animator.SetFloat("Speed", animationSpeed );
+            animator.SetFloat("Speed", animationSpeed);
 
-            
-            
-            UpCombo(); //ajout combo si enemy touché
+            // ── Feedback : HitStop + Camera Shake ───────────────────────────
+            if (feedbackConfig != null)
+            {
+                HitStop.Instance?.Stop(feedbackConfig.hitStopDuration);
+                CameraShake.Instance?.Shake(feedbackConfig.hitShakeDuration, feedbackConfig.hitShakeMagnitude);
+            }
+            // ────────────────────────────────────────────────────────────────
 
+            // ── Feedback : Stun sur l'ennemi touché ─────────────────────────
+            EnemyStun stun = other.GetComponent<EnemyStun>();
+            if (stun == null) stun = other.GetComponentInParent<EnemyStun>();
+            if (stun != null && feedbackConfig != null)
+                stun.Stun(feedbackConfig.stunDuration);
+            // ────────────────────────────────────────────────────────────────
 
+            UpCombo();
         }
     }
 
@@ -118,7 +128,6 @@ public class SwordPlayer : MonoBehaviour
         col.enabled = true;
     }
 
-    
     public void CollisionDesactivate()
     {
         col.enabled = false;
@@ -128,7 +137,6 @@ public class SwordPlayer : MonoBehaviour
     {
         animationSpeed = 1f;
         currentCooldown = 1f;
-
     }
 
     public void UpCombo()
@@ -138,26 +146,22 @@ public class SwordPlayer : MonoBehaviour
 
     private void Counter(Transform point)
     {
-        //StartCoroutine(CounterAttack(point));
         animator.SetTrigger("HasParry");
-        _counterPosition = point.position;
+        //_counterPosition = point.position;
+
+        // ── Feedback : hitstop + shake plus intenses pour le counter ────────
+        if (feedbackConfig != null)
+        {
+            HitStop.Instance?.Stop(feedbackConfig.counterStopDuration);
+            CameraShake.Instance?.Shake(feedbackConfig.counterShakeDuration, feedbackConfig.counterShakeMagnitude);
+        }
+        // ────────────────────────────────────────────────────────────────────
     }
 
     private void CounterProjectile(Transform point)
     {
-        return;
+        Instantiate(Projectile, SpawnPointProjectile.position, Quaternion.identity);
     }
-
-    /*IEnumerator CounterAttack(Transform point)
-    {
-        animator.SetTrigger("HasParry");
-        yield return new WaitForSeconds(3);
-        transform.position = point.position;
-        AddCombo?.Invoke();
-        yield return new WaitForSecondsRealtime(1f);
-        transform.position = StartPosition;
-        
-    }*/
 
     public void EndSupriseJump()
     {
@@ -176,6 +180,4 @@ public class SwordPlayer : MonoBehaviour
         _damage = 1f;
         GetComponent<BoxCollider2D>().size = new Vector2(0.2364149f, 0.16f);
     }
-    
-    
 }

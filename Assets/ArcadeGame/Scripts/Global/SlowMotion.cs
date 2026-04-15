@@ -2,15 +2,16 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Singleton that freezes time for a short duration to punctuate impactful events.
-/// Uses unscaled time so the coroutine continues while timeScale is 0.
-/// Call FreezeFrame() from any feedback orchestrator or game system.
+/// Singleton qui ralentit le temps pour les moments impactants (parry réussi, counter).
+/// Utilise le temps non-scalé pour que la coroutine continue pendant le ralenti.
+/// La récupération est progressive (smoothstep) pour éviter le saut brutal.
 /// </summary>
 public class SlowMotion : MonoBehaviour
 {
-    public static SlowMotion Instance { get; private set; } 
+    public static SlowMotion Instance { get; private set; }
 
     private Coroutine _currentFreeze;
+    private float _remainingFreeze;
 
     private void Awake()
     {
@@ -19,36 +20,51 @@ public class SlowMotion : MonoBehaviour
     }
 
     /// <summary>
-    /// Freezes gameplay for <paramref name="duration"/> seconds (unscaled).
-    /// If a freeze is already running, the longer one wins.
+    /// Ralentit le jeu au scale configuré pendant <paramref name="duration"/> secondes,
+    /// puis récupère progressivement sur <paramref name="recovery"/> secondes.
+    /// Si un ralenti est déjà actif, le plus long gagne.
     /// </summary>
-    public void FreezeFrame(float duration)
+    public void FreezeFrame(float duration, float slowScale = 0.2f, float recovery = 0.3f)
     {
         if (duration <= 0f) return;
 
         if (_currentFreeze != null)
         {
-            // Keep the longer freeze active.
             if (duration <= _remainingFreeze) return;
             StopCoroutine(_currentFreeze);
-            Time.timeScale = 0f;
         }
 
-        _currentFreeze = StartCoroutine(FreezeRoutine(duration));
+        _currentFreeze = StartCoroutine(SlowRoutine(duration, slowScale, recovery));
     }
 
-    private float _remainingFreeze;
-
-    private IEnumerator FreezeRoutine(float duration)
+    /// <summary>Surcharge pratique qui lit les valeurs depuis un SlowMotionConfig.</summary>
+    public void FreezeFrame(SlowMotionConfig config)
     {
+        if (config == null) return;
+        FreezeFrame(config.slowMotionDuration, config.slowMotionScale, config.slowMotionRecovery);
+    }
+
+    private IEnumerator SlowRoutine(float duration, float slowScale, float recovery)
+    {
+        // Phase ralentie
         _remainingFreeze = duration;
-        Time.timeScale = 0f;
+        Time.timeScale = slowScale;
 
         float elapsed = 0f;
         while (elapsed < duration)
         {
             elapsed += Time.unscaledDeltaTime;
             _remainingFreeze = duration - elapsed;
+            yield return null;
+        }
+
+        // Phase de récupération progressive (smoothstep pour éviter le pop)
+        float recoveryElapsed = 0f;
+        while (recoveryElapsed < recovery)
+        {
+            recoveryElapsed += Time.unscaledDeltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, recoveryElapsed / recovery);
+            Time.timeScale = Mathf.Lerp(slowScale, 1f, t);
             yield return null;
         }
 

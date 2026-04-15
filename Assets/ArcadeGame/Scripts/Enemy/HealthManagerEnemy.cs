@@ -1,9 +1,13 @@
+using System;
 using UnityEngine;
 
 public class HealthManagerEnemy : MonoBehaviour
 {
     [SerializeField] float health = 5f;
     private Animator _animator;
+    [SerializeField] private FeedbackConfig feedbackConfig;
+    
+    public static event Action OnEnemyKilled;
 
     private void Start()
     {
@@ -13,7 +17,9 @@ public class HealthManagerEnemy : MonoBehaviour
     public void TakeDamage(float damage)
     {
         health -= damage;
-        SlowMotion.Instance.FreezeFrame(0.1f);
+        _animator.SetTrigger("Hit");
+        HitStop.Instance?.Stop(feedbackConfig.hitStopDuration);
+        
         if (health <= 0)
         {
             Die();
@@ -23,7 +29,12 @@ public class HealthManagerEnemy : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log("Mort");
+        Debug.Log(gameObject.name);
         Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        OnEnemyKilled?.Invoke();
     }
 }
