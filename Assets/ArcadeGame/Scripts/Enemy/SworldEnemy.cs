@@ -17,11 +17,9 @@ public class SworldEnemy : MonoBehaviour
     public event Action<Transform> HasParry;
     [SerializeField] private Transform _counterPosition;
 
-    // ── Feedback ─────────────────────────────────────────────────────────────
     [SerializeField] private FeedbackConfig feedbackConfig;
     private ParryManager _parryManager;
     private EnemyStun _enemyStun;
-    // ────────────────────────────────────────────────────────────────────────
 
     private void Start()
     {
@@ -32,37 +30,32 @@ public class SworldEnemy : MonoBehaviour
         player = FindObjectOfType<SwordPlayer>();
         player.RegisterEnemy(this);
 
-        // ── Récupère automatiquement les singletons de la scène ─────────────
         _parryManager = FindObjectOfType<ParryManager>();
         _enemyStun = GetComponent<EnemyStun>();
-        // ────────────────────────────────────────────────────────────────────
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        HealthManagerPlayer hmp = other.GetComponent<HealthManagerPlayer>();
-        ParryManager parry = other.GetComponent<ParryManager>();
+        // ── Cherche sur l'objet ET son parent (le collider peut être un child) 
+        HealthManagerPlayer hmp = other.GetComponent<HealthManagerPlayer>()
+                               ?? other.GetComponentInParent<HealthManagerPlayer>();
+
+        ParryManager parry = other.GetComponent<ParryManager>()
+                          ?? other.GetComponentInParent<ParryManager>();
+        // ────────────────────────────────────────────────────────────────────
 
         if (parry != null && parry.ParryActive)
         {
             Debug.Log("PARRY SUCCESS");
             _animator.SetTrigger("Hit");
 
-            // ── Feedback parry : hitstop + camera shake + stun ──────────────
             _parryManager?.OnSuccessfulParry(_collider);
-            // ────────────────────────────────────────────────────────────────
 
-            // ── SlowMotion dramatique sur le parry ──────────────────────────
-            slowMotion?.FreezeFrame(feedbackConfig != null
-                ? new SlowMotionConfig { slowMotionDuration = 0.25f, slowMotionScale = 0.15f, slowMotionRecovery = 0.35f }
-                : null);
-            // ────────────────────────────────────────────────────────────────
+            slowMotion?.FreezeFrame(0.25f, 0.15f, 0.35f);
 
-            // ── Active le counter du joueur ─────────────────────────────────
             HasParry?.Invoke(_counterPosition);
-            // ────────────────────────────────────────────────────────────────
 
-            return; // On ne fait pas de dégâts si le parry est réussi
+            return; // Pas de dégâts si parry réussi
         }
 
         if (hmp != null)
@@ -71,23 +64,13 @@ public class SworldEnemy : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        _enemy.Ataque += Attack;
-    }
-
-    private void OnDisable()
-    {
-        _enemy.Ataque -= Attack;
-    }
+    private void OnEnable()  => _enemy.Ataque += Attack;
+    private void OnDisable() => _enemy.Ataque -= Attack;
 
     private void Attack()
     {
         if (!canAttack) return;
-
-        // ── Ne pas attaquer si l'ennemi est stun ────────────────────────────
         if (_enemyStun != null && _enemyStun.IsStunned) return;
-        // ────────────────────────────────────────────────────────────────────
 
         _animator.SetTrigger("Attack");
         StartCoroutine(AttackRoutine());
@@ -96,23 +79,13 @@ public class SworldEnemy : MonoBehaviour
     IEnumerator AttackRoutine()
     {
         canAttack = false;
-
         yield return new WaitForSeconds(0.1f);
-
         yield return new WaitForSeconds(_cooldown);
-
         canAttack = true;
     }
 
-    public void ActiveBox()
-    {
-        _collider.enabled = true;
-    }
-
-    public void InactiveBox()
-    {
-        _collider.enabled = false;
-    }
+    public void ActiveBox()   => _collider.enabled = true;
+    public void InactiveBox() => _collider.enabled = false;
 
     void OnDestroy()
     {

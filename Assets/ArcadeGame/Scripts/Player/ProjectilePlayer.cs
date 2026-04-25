@@ -46,7 +46,7 @@ public class ProjectilePlayer : MonoBehaviour
 
         if (Hme2 != null)
         {
-            Hme2.TakeDamage(1f);
+            Hme2.TakeDamage(2f);
             HitStop.Instance?.Stop(feedbackConfig.hitStopDuration);
             CameraShake.Instance?.Shake(feedbackConfig.hitShakeDuration, feedbackConfig.hitShakeMagnitude);
         }

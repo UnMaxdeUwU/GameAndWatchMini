@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 402888356890218947}
   - component: {fileID: 2347242126485415102}
   - component: {fileID: 2382534436988612762}
-  - component: {fileID: 2104110381856445818}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -103,19 +102,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &2104110381856445818
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1107703574838114968}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7219ff2be97bca43a79cb0e83457b5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ComboController
-  _swordPlayer: {fileID: 0}
 --- !u!1 &2114999401627338220
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,6 +113,7 @@ GameObject:
   - component: {fileID: 5055431171829319804}
   - component: {fileID: 9061135431326868180}
   - component: {fileID: 3504632977995516512}
+  - component: {fileID: 792695512917963303}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -148,9 +135,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1538015897819137868}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -172, y: -175}
+  m_AnchorMin: {x: 0.887, y: 0.8792501}
+  m_AnchorMax: {x: 0.887, y: 0.8792501}
+  m_AnchoredPosition: {x: 0, y: -1}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9061135431326868180
@@ -181,7 +168,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: xxxxx
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 772d095c1e60b5f4a8de72917b30f564, type: 2}
   m_sharedMaterial: {fileID: 4250671316787160232, guid: 772d095c1e60b5f4a8de72917b30f564, type: 2}
@@ -247,9 +234,25 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -50.035645, y: 0, z: -125.40039, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &792695512917963303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2114999401627338220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7219ff2be97bca43a79cb0e83457b5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ComboController
+  _swordPlayer: {fileID: 0}
+  punchScale: 1.4
+  punchDuration: 0.08
+  returnDuration: 0.12
