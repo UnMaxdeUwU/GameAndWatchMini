@@ -11,6 +11,7 @@ public class HealthManagerBoss : MonoBehaviour
     private bool _phase2Triggered = false;
 
     public static event Action OnBossKilled;
+    [SerializeField] private LayerMask damageableLayers;
 
     private void Start()
     {
@@ -35,11 +36,21 @@ public class HealthManagerBoss : MonoBehaviour
         if (health <= 0)
             Die();
     }
+    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        // Ignore tout collider qui n'est pas dans les layers autorisés
+        if ((damageableLayers.value & (1 << other.gameObject.layer)) == 0) return;
+
+        // Le TakeDamage est géré par SwordPlayer / ProjectilePlayer qui appellent
+        // directement cette méthode — ce bloc sert uniquement de garde de sécurité
+        // si un autre système veut passer par le trigger directement.
+    }
 
     private void Die()
     {
         _animator.SetTrigger("Death");
         OnBossKilled?.Invoke();
-        Destroy(gameObject, 1f); // petit délai pour laisser l'anim de mort jouer
+        Destroy(gameObject, 3f); // petit délai pour laisser l'anim de mort jouer
     }
 }

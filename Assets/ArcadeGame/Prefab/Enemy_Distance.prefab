@@ -119,6 +119,22 @@ PrefabInstance:
       propertyPath: distanceBetweenPlayer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 6696789817263457585, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+      propertyPath: m_Size.x
+      value: 0.4317193
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696789817263457585, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+      propertyPath: m_Size.y
+      value: 0.33469585
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696789817263457585, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+      propertyPath: m_Offset.x
+      value: -1.5315857
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696789817263457585, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.045007423
+      objectReference: {fileID: 0}
     - target: {fileID: 7889878613504501995, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
       value: 1.44
@@ -155,6 +171,7 @@ PrefabInstance:
     - {fileID: -102467129159923603, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
     - {fileID: -1185548298185881272, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
     - {fileID: 6628986363522254892, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+    - {fileID: 1484929367427161803, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1809287281526712338, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
@@ -170,12 +187,32 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2324945766742027975, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 782033931529826830}
+    - targetCorrespondingSourceObject: {fileID: 5939553678512998484, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8273796289152919278}
   m_SourcePrefab: {fileID: 100100000, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
---- !u!61 &2406690215849163348 stripped
+--- !u!61 &1222714175416620942 stripped
 BoxCollider2D:
-  m_CorrespondingSourceObject: {fileID: 7889878613504501995, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+  m_CorrespondingSourceObject: {fileID: 6696789817263457585, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
   m_PrefabInstance: {fileID: 5483188397658591935}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2194865255213570795 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5939553678512998484, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+  m_PrefabInstance: {fileID: 5483188397658591935}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8273796289152919278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2194865255213570795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c093013a544dde45a30e405ec25b5a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossHitbox
 --- !u!4 &6125972987623766701 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1809287281526712338, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
@@ -199,7 +236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy_Distance
   _enemy: {fileID: 782033931529826830}
-  _collider2D: {fileID: 2406690215849163348}
+  _collider2D: {fileID: 1222714175416620942}
   _ProjectileSpawnPoint: {fileID: 8877290625440489561}
   _projectile: {fileID: 1698775092601053955, guid: a8c9de9d55b8b2344a5bce822a131d35, type: 3}
 --- !u!114 &6154983312715318381
@@ -216,6 +253,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HealthManagerBoss
   health: 20
   feedbackConfig: {fileID: 11400000, guid: 7077cf6bb584a3b4494df0a27d1733d0, type: 2}
+  damageableLayers:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!114 &782033931529826830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,4 +270,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Movement_Boss
   distanceBetweenPlayer: 2
   speed: 3
+  laserAttackCooldown: 4
   meleeAttackCooldown: 2.5
+  _collider: {fileID: 1222714175416620942}

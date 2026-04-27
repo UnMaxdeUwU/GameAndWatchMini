@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60e3903a63bed5b47aa98f96d2c777db, type: 3}
+  m_Name: ComboConfig
+  m_EditorClassIdentifier: Assembly-CSharp::ComboConfig
+  rankThresholds: 050000000f0000001e0000003200000050000000
+  rankLabels:
+  - BRUTAL
+  - SAVAGE
+  - MAYHEM
+  - INSANE
+  - GODLIKE
+  rankColors:
+  - {r: 1, g: 1, b: 0.2, a: 1}
+  - {r: 1, g: 0.6, b: 0.1, a: 1}
+  - {r: 1, g: 0.27591035, b: 0, a: 1}
+  - {r: 1, g: 0.043693237, b: 0, a: 1}
+  - {r: 0.93760705, g: 0, b: 0.97735846, a: 1}
+  basePunchScale: 1.35
+  punchOutDuration: 0.07
+  punchBackDuration: 0.12
+  colorLow: {r: 1, g: 1, b: 1, a: 1}
+  colorMedium: {r: 1, g: 0.55, b: 0.1, a: 1}
+  colorHigh: {r: 1, g: 0.15, b: 0.15, a: 1}
+  colorExtreme: {r: 1, g: 1, b: 0.2, a: 1}
+  extremeThreshold: 40
+  baseHitStop: 0.04
+  maxHitStop: 0.14
+  hitStopMaxCombo: 50
+  baseShakeMag: 0.06
+  maxShakeMag: 0.22
+  baseShakeDur: 0.1
+  maxShakeDur: 0.2
+  shakeMaxCombo: 50
+  comboTimeout: 3

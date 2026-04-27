@@ -14,7 +14,6 @@ public class Movement_Boss : MonoBehaviour
     [Header("Phase 2 - Mêlée")]
     [SerializeField] private float meleeAttackCooldown = 2.5f;
 
-    // Event écouté par Enemy_Distance pour spawn le projectile (phase 1)
     public event Action Ataque;
 
     private Transform _target;
@@ -24,6 +23,10 @@ public class Movement_Boss : MonoBehaviour
 
     private bool _phase2 = false;
 
+    private ParryManager _parryManager;
+    [SerializeField] private Collider2D _collider;
+    private SlowMotion slowMotion;
+
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -31,14 +34,11 @@ public class Movement_Boss : MonoBehaviour
         _animator = GetComponent<Animator>();
         _animator.SetTrigger("AsSpawn");
 
-        // Démarre la boucle laser phase 1
         _attackRoutine = StartCoroutine(LaserLoop());
+        _parryManager = FindObjectOfType<ParryManager>();
+        slowMotion = FindObjectOfType<SlowMotion>();
     }
 
-    /// <summary>
-    /// Appelé par HealthManagerBoss au premier TakeDamage.
-    /// Arrête le laser et démarre le rush mêlée.
-    /// </summary>
     public void EnterPhase2()
     {
         if (_phase2) return;
@@ -72,18 +72,14 @@ public class Movement_Boss : MonoBehaviour
         }
     }
 
-    // ── Phase 1 ─────────────────────────────────────────────────────────────
-
     private IEnumerator LaserLoop()
     {
         while (true)
         {
             yield return new WaitForSeconds(laserAttackCooldown);
-            Ataque?.Invoke(); // Enemy_Distance écoute ça pour spawner le projectile
+            Ataque?.Invoke();
         }
     }
-
-    // ── Phase 2 ─────────────────────────────────────────────────────────────
 
     private IEnumerator MeleeLoop()
     {
@@ -104,4 +100,27 @@ public class Movement_Boss : MonoBehaviour
         else
             _animator.SetTrigger("FireSlam");
     }
+
+    // ── Appelé par BossHitbox (child GO) — plus de OnTriggerEnter2D ici ────
+    public void OnHitboxTrigger(Collider2D other)
+    {
+        HealthManagerPlayer hmp = other.GetComponent<HealthManagerPlayer>()
+                               ?? other.GetComponentInParent<HealthManagerPlayer>();
+
+        ParryManager parry = other.GetComponent<ParryManager>()
+                          ?? other.GetComponentInParent<ParryManager>();
+
+        if (parry != null && parry.ParryActive)
+        {
+            Debug.Log("PARRY SUCCESS BOSS");
+            _animator.SetTrigger("Hit");
+            _parryManager?.OnSuccessfulParry(_collider);
+            slowMotion?.FreezeFrame(0.25f, 0.15f, 0.35f);
+            return;
+        }
+
+        if (hmp != null)
+            hmp.TakeDamage(1f);
+    }
+    // ────────────────────────────────────────────────────────────────────────
 }

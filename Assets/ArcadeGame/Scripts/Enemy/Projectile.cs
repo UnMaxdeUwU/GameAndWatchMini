@@ -37,8 +37,7 @@ public class Projectile : MonoBehaviour
             Destroy();
 
         }
-            
-        if (Hmp != null)
+        else if (Hmp != null)
         {
             Hmp.TakeDamage(1f);
             Debug.Log("TOUCHERRRRRRRRRRRRRRRRR");

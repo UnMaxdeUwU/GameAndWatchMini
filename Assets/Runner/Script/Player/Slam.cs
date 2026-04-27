@@ -58,6 +58,7 @@ public class Slam : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
 
         canAttack = true;
+
     }
 
     private void OnTriggerEnter2D(Collider2D other)

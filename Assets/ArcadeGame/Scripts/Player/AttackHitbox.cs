@@ -1,7 +1,6 @@
 using UnityEngine;
 
 /// <summary>
-/// À placer sur le child GO qui porte la BoxCollider2D trigger d'attaque.
 /// Reçoit les OnTriggerEnter2D isolément du parent, évitant les faux positifs.
 /// </summary>
 public class AttackHitbox : MonoBehaviour

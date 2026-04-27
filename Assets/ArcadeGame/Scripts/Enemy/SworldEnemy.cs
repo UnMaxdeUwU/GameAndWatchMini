@@ -8,7 +8,7 @@ public class SworldEnemy : MonoBehaviour
     private SwordPlayer player;
 
     private SlowMotion slowMotion;
-    private Collider2D _collider;
+    [SerializeField] Collider2D _collider;
     private bool canAttack = true;
     private Animator _animator;
 
@@ -23,7 +23,6 @@ public class SworldEnemy : MonoBehaviour
 
     private void Start()
     {
-        _collider = GetComponent<Collider2D>();
         _animator = GetComponent<Animator>();
         slowMotion = FindObjectOfType<SlowMotion>();
 
@@ -34,35 +33,29 @@ public class SworldEnemy : MonoBehaviour
         _enemyStun = GetComponent<EnemyStun>();
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    // ── Appelé par EnemyHitbox (child GO) — plus de OnTriggerEnter2D ici ───
+    public void OnHitboxTrigger(Collider2D other)
     {
-        // ── Cherche sur l'objet ET son parent (le collider peut être un child) 
         HealthManagerPlayer hmp = other.GetComponent<HealthManagerPlayer>()
                                ?? other.GetComponentInParent<HealthManagerPlayer>();
 
         ParryManager parry = other.GetComponent<ParryManager>()
                           ?? other.GetComponentInParent<ParryManager>();
-        // ────────────────────────────────────────────────────────────────────
 
         if (parry != null && parry.ParryActive)
         {
             Debug.Log("PARRY SUCCESS");
             _animator.SetTrigger("Hit");
-
             _parryManager?.OnSuccessfulParry(_collider);
-
             slowMotion?.FreezeFrame(0.25f, 0.15f, 0.35f);
-
             HasParry?.Invoke(_counterPosition);
-
-            return; // Pas de dégâts si parry réussi
+            return;
         }
 
         if (hmp != null)
-        {
             hmp.TakeDamage(1f);
-        }
     }
+    // ────────────────────────────────────────────────────────────────────────
 
     private void OnEnable()  => _enemy.Ataque += Attack;
     private void OnDisable() => _enemy.Ataque -= Attack;

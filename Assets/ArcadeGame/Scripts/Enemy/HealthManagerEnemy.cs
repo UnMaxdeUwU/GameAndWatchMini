@@ -26,7 +26,7 @@ public class HealthManagerEnemy : MonoBehaviour
 
         if (health <= 0)
         {
-            _animator.SetTrigger("Death");
+
             Die();
         }
     }
@@ -43,8 +43,9 @@ public class HealthManagerEnemy : MonoBehaviour
 
     private void Die()
     {
+        _animator.SetTrigger("Death");
         Debug.Log(gameObject.name);
-        Destroy(gameObject);
+        Destroy(gameObject,3f);
     }
 
     private void OnDestroy()
