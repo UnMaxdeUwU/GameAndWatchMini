@@ -2,49 +2,52 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 
-/// <summary>
-/// Affiche :
-///   - Le score total au format 000000 avec flash blanc sur mise à jour
-///   - Un "+{bonus}" animé qui entre depuis le côté à l'expiration du combo
-///   - Un texte de félicitation (NICE! → Out Of This World!!!) selon le rank final
-/// </summary>
 public class ScoreUIFeedback : MonoBehaviour
 {
     [Header("Score total")]
     [SerializeField] private TMP_Text _scoreText;
+    [SerializeField] private Color    _scoreBaseColor = new Color(1f, 0.9f, 0.2f); // couleur de base réglable
+    [SerializeField] private float    _scoreFlashDur  = 0.06f;
 
-    [Header("Bonus combo (+ {valeur})")]
-    [SerializeField] private TMP_Text  _bonusText;
-    [SerializeField] private RectTransform _bonusRect;
-    [Tooltip("Position de départ du bonus (offset X depuis l'ancre)")]
+    [Header("Bonus combo (+valeur)")]
+    [SerializeField] private TMP_Text       _bonusText;
+    [SerializeField] private RectTransform  _bonusRect;
     [SerializeField] private float _bonusStartOffsetX = -120f;
     [SerializeField] private float _bonusMoveDur      = 0.35f;
     [SerializeField] private float _bonusHoldDur      = 1.0f;
     [SerializeField] private float _bonusFadeDur      = 0.3f;
+    [Tooltip("Scale du texte +bonus au moment de l'entrée")]
+    [SerializeField] private float _bonusPeakScale    = 2.2f;
 
-    [Header("Texte de rank final")]
+    [SerializeField] private float bonusScale = 1.8f;
+
+    [Header("Texte de rank final (NICE! → Out Of This World!!!)")]
     [SerializeField] private TMP_Text _rankResultText;
-    [Tooltip("Labels par rank index (doit correspondre aux rankThresholds)")]
     [SerializeField] private string[] _rankResultLabels =
         { "NICE!", "GREAT!", "SUPER!", "AMAZING!", "Out Of This World!!!" };
-    [SerializeField] private float _rankResultPunchDur  = 0.12f;
-    [SerializeField] private float _rankResultPeakScale = 3.5f;
+    [Tooltip("Scale maximum au moment du punch brutal")]
+    [SerializeField] private float _rankResultPeakScale = 7f;
+    [SerializeField] private float _rankResultPunchDur  = 0.10f;
     [SerializeField] private float _rankResultHoldDur   = 1.2f;
     [SerializeField] private float _rankResultFadeDur   = 0.4f;
+    [SerializeField] private float scaleRank = 2.2f;
 
-    [Header("Flash blanc score")]
-    [SerializeField] private float _scoreFlashDur = 0.06f;
+    // ── État interne ─────────────────────────────────────────────────────────
+    private Vector2   _bonusAnchoredPos;
+    private Color     _lastComboColor = Color.white; // couleur mémorisée depuis le combo expiré
 
-    private Vector2 _bonusAnchoredPos;
+    private Coroutine _scoreFlashRoutine;
     private Coroutine _bonusRoutine;
     private Coroutine _rankResultRoutine;
-    private Coroutine _scoreFlashRoutine;
+
+    // ── Unity ────────────────────────────────────────────────────────────────
 
     private void Awake()
     {
-        _bonusAnchoredPos = _bonusRect.anchoredPosition;
-        _scoreText.text   = "000000";
-        _bonusText.alpha  = 0f;
+        _bonusAnchoredPos     = _bonusRect.anchoredPosition;
+        _scoreText.text       = "000000";
+        _scoreText.color      = _scoreBaseColor;
+        _bonusText.alpha      = 0f;
         _rankResultText.alpha = 0f;
     }
 
@@ -53,6 +56,7 @@ public class ScoreUIFeedback : MonoBehaviour
         ScoreManager.OnScoreChanged    += HandleScoreChanged;
         ScoreManager.OnBonusScoreAdded += HandleBonusAdded;
         ComboManager.OnComboExpired    += HandleComboExpired;
+        ComboManager.OnComboIncreased  += HandleComboIncreased; // pour mémoriser la couleur courante
     }
 
     private void OnDisable()
@@ -60,6 +64,13 @@ public class ScoreUIFeedback : MonoBehaviour
         ScoreManager.OnScoreChanged    -= HandleScoreChanged;
         ScoreManager.OnBonusScoreAdded -= HandleBonusAdded;
         ComboManager.OnComboExpired    -= HandleComboExpired;
+        ComboManager.OnComboIncreased  -= HandleComboIncreased;
+    }
+
+    // Mémorise la couleur du combo en temps réel pour l'avoir au moment de l'expiration
+    private void HandleComboIncreased(int combo)
+    {
+        _lastComboColor = GetComboColor(combo);
     }
 
     // ── Score total ──────────────────────────────────────────────────────────
@@ -74,13 +85,11 @@ public class ScoreUIFeedback : MonoBehaviour
 
     private IEnumerator ScoreFlash()
     {
+        // Flash vers blanc
         _scoreText.color = Color.white;
         yield return new WaitForSecondsRealtime(_scoreFlashDur);
-        _scoreText.color = Color.white; // le score reste blanc — le flash est subtil via alpha
-        // Pour un flash plus visible, on peut booster le glow via material mais ici on pulse l'alpha
-        _scoreText.alpha = 0.5f;
-        yield return new WaitForSecondsRealtime(_scoreFlashDur);
-        _scoreText.alpha = 1f;
+        // Retour à la couleur de base
+        _scoreText.color = _scoreBaseColor;
         _scoreFlashRoutine = null;
     }
 
@@ -89,6 +98,7 @@ public class ScoreUIFeedback : MonoBehaviour
     private void HandleBonusAdded(int bonus, Color rankColor)
     {
         if (_bonusRoutine != null) StopCoroutine(_bonusRoutine);
+        // Le bonus utilise la couleur du rang (déjà correcte depuis ScoreManager)
         _bonusRoutine = StartCoroutine(BonusRoutine(bonus, rankColor));
     }
 
@@ -97,29 +107,30 @@ public class ScoreUIFeedback : MonoBehaviour
         _bonusText.text  = $"+{bonus}";
         _bonusText.color = color;
         _bonusText.alpha = 0f;
+        _bonusText.transform.localScale = Vector3.one * _bonusPeakScale;
 
-        // Position de départ décalée
         Vector2 startPos = _bonusAnchoredPos + new Vector2(_bonusStartOffsetX, 0f);
         _bonusRect.anchoredPosition = startPos;
 
-        // Entrée : déplacement + fade in simultanés
+        // Entrée : déplacement + fade in + rétrécissement vers scale 1
         float t = 0f;
         while (t < _bonusMoveDur)
         {
             t += Time.unscaledDeltaTime;
-            float ease = 1f - Mathf.Pow(1f - t / _bonusMoveDur, 3f); // ease out cubic
-            _bonusRect.anchoredPosition = Vector2.Lerp(startPos, _bonusAnchoredPos, ease);
-            _bonusText.alpha = Mathf.Lerp(0f, 1f, t / _bonusMoveDur);
+            float ease = 1f - Mathf.Pow(1f - t / _bonusMoveDur, 3f);
+            _bonusRect.anchoredPosition       = Vector2.Lerp(startPos, _bonusAnchoredPos, ease);
+            _bonusText.alpha                  = Mathf.Lerp(0f, 1f, t / _bonusMoveDur);
+            float s = Mathf.Lerp(_bonusPeakScale, 1f, ease);
+            _bonusText.transform.localScale   = Vector3.one * s;
             yield return null;
         }
 
-        _bonusRect.anchoredPosition = _bonusAnchoredPos;
-        _bonusText.alpha = 1f;
+        _bonusRect.anchoredPosition     = _bonusAnchoredPos;
+        _bonusText.alpha                = 1f;
+        _bonusText.transform.localScale = Vector3.one * bonusScale;
 
-        // Maintien
         yield return new WaitForSecondsRealtime(_bonusHoldDur);
 
-        // Fade out
         t = 0f;
         while (t < _bonusFadeDur)
         {
@@ -139,44 +150,44 @@ public class ScoreUIFeedback : MonoBehaviour
         if (finalRank < 0 || finalRank >= _rankResultLabels.Length) return;
 
         if (_rankResultRoutine != null) StopCoroutine(_rankResultRoutine);
-        _rankResultRoutine = StartCoroutine(RankResultRoutine(finalRank));
+        // Utilise la couleur mémorisée du combo au moment où il s'est arrêté
+        _rankResultRoutine = StartCoroutine(RankResultRoutine(finalRank, _lastComboColor));
     }
 
-    private IEnumerator RankResultRoutine(int rankIndex)
+    private IEnumerator RankResultRoutine(int rankIndex, Color color)
     {
         _rankResultText.text  = _rankResultLabels[rankIndex];
+        _rankResultText.color = color;
         _rankResultText.alpha = 1f;
         _rankResultText.transform.localScale = Vector3.zero;
 
-        // Grossissement très rapide (punch brutal)
+        AudioEvents.RaiseRankResult();
+
+        // Punch brutal très rapide vers peak
         float t = 0f;
         while (t < _rankResultPunchDur)
         {
             t += Time.unscaledDeltaTime;
             float ease = 1f - Mathf.Pow(1f - t / _rankResultPunchDur, 2f);
-            float s    = Mathf.Lerp(0f, _rankResultPeakScale, ease);
-            _rankResultText.transform.localScale = Vector3.one * s;
+            _rankResultText.transform.localScale = Vector3.one * Mathf.Lerp(0f, _rankResultPeakScale, ease);
             yield return null;
         }
 
-        // Retour à taille normale rapidement
+        // Retour rapide à taille 1
         t = 0f;
-        float retractDur = _rankResultPunchDur * 0.8f;
+        float retractDur = _rankResultPunchDur * 0.7f;
         while (t < retractDur)
         {
             t += Time.unscaledDeltaTime;
             float ease = 1f - Mathf.Pow(1f - t / retractDur, 3f);
-            float s    = Mathf.Lerp(_rankResultPeakScale, 1f, ease);
-            _rankResultText.transform.localScale = Vector3.one * s;
+            _rankResultText.transform.localScale = Vector3.one * Mathf.Lerp(_rankResultPeakScale, 1f, ease);
             yield return null;
         }
 
-        _rankResultText.transform.localScale = Vector3.one;
+        _rankResultText.transform.localScale = Vector3.one * scaleRank;
 
-        // Maintien
         yield return new WaitForSecondsRealtime(_rankResultHoldDur);
 
-        // Fade out
         t = 0f;
         while (t < _rankResultFadeDur)
         {
@@ -187,5 +198,26 @@ public class ScoreUIFeedback : MonoBehaviour
 
         _rankResultText.alpha = 0f;
         _rankResultRoutine = null;
+    }
+
+    // ── Couleur combo (miroir de ComboUIFeedback) ────────────────────────────
+
+    private static Color GetComboColor(int combo)
+    {
+        if (combo <= 10) return Color.Lerp(Color.white, new Color(1f, 1f, 0.4f), combo / 10f);
+        if (combo <= 20) return Color.Lerp(new Color(1f, 1f, 0.4f), new Color(1f, 0.5f, 0f), (combo - 10f) / 10f);
+        if (combo <= 21) return new Color(0.4f, 1f, 0.4f);
+        if (combo <= 33) return Color.Lerp(new Color(0.4f, 1f, 0.4f), new Color(0f, 0.5f, 0f), (combo - 21f) / 12f);
+        if (combo <= 34) return Hex("4169E1");
+        if (combo <= 55) return Color.Lerp(Hex("4169E1"), new Color(0.6f, 0f, 1f), (combo - 34f) / 21f);
+        if (combo <= 56) return Hex("FF196B");
+        if (combo <= 70) return Color.Lerp(Hex("FF196B"), Hex("FF0000"), (combo - 55f) / 15f);
+        return Hex("FF0000");
+    }
+
+    private static Color Hex(string hex)
+    {
+        ColorUtility.TryParseHtmlString("#" + hex, out Color c);
+        return c;
     }
 }

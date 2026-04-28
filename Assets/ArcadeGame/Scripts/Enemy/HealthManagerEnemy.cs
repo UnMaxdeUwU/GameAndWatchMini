@@ -9,6 +9,8 @@ public class HealthManagerEnemy : MonoBehaviour
 
     // ── Layer autorisé à infliger des dégâts ────────────────────────────────
     [SerializeField] private LayerMask damageableLayers;
+    [SerializeField] private Collider2D _collider2D;
+    
     // ────────────────────────────────────────────────────────────────────────
 
     public static event Action OnEnemyKilled;
@@ -23,10 +25,11 @@ public class HealthManagerEnemy : MonoBehaviour
         health -= damage;
         _animator.SetTrigger("Hit");
         HitStop.Instance?.Stop(feedbackConfig.hitStopDuration);
+        AudioEvents.RaiseEnemyHit();
 
         if (health <= 0)
-        {
-
+        {   
+            _collider2D.enabled = false;
             Die();
         }
     }

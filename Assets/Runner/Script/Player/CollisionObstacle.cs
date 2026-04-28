@@ -1,10 +1,9 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CollisionObstacle : MonoBehaviour
 {
-    [SerializeField] private HealthManagerPlayer _healthManagerPlayer;
+    [SerializeField] private HealthManagerRunner _healthManagerRunner;
     private Rigidbody2D _rigidbody2D;
     public static event Action PlayerFallInVoid;
     public static event Action Checkpoint;
@@ -18,13 +17,13 @@ public class CollisionObstacle : MonoBehaviour
     {
         if (other.gameObject.GetComponent<Spike>() != null)
         {
-            _healthManagerPlayer.TakeDamage(1);
+            _healthManagerRunner.TakeDamage(1);
             Spike?.Invoke();
 
         }
         else if (other.gameObject.GetComponent<Void>() != null)
         {
-            _healthManagerPlayer.TakeDamage(1);
+            _healthManagerRunner.TakeDamage(1);
             PlayerFallInVoid?.Invoke();
         }
 

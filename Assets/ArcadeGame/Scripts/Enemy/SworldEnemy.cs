@@ -57,8 +57,23 @@ public class SworldEnemy : MonoBehaviour
     }
     // ────────────────────────────────────────────────────────────────────────
 
-    private void OnEnable()  => _enemy.Ataque += Attack;
-    private void OnDisable() => _enemy.Ataque -= Attack;
+    private void OnEnable()
+    {
+        _enemy.Ataque += Attack;
+        HealthManagerPlayer.OnPlayerDied += OnPlayerDied;
+    }
+
+    private void OnDisable()
+    {
+        _enemy.Ataque -= Attack;
+        HealthManagerPlayer.OnPlayerDied -= OnPlayerDied;
+    }
+
+    private void OnPlayerDied()
+    {
+        StopAllCoroutines();
+        enabled = false;
+    }
 
     private void Attack()
     {
@@ -77,7 +92,13 @@ public class SworldEnemy : MonoBehaviour
         canAttack = true;
     }
 
-    public void ActiveBox()   => _collider.enabled = true;
+    /// <summary>Appelé par l'event animator — active la hitbox et joue le son d'attaque.</summary>
+    public void ActiveBox()
+    {
+        _collider.enabled = true;
+        AudioEvents.RaiseEnemySimpleAttack();
+    }
+
     public void InactiveBox() => _collider.enabled = false;
 
     void OnDestroy()

@@ -65,7 +65,7 @@ public class InputPlayerManagerCustomGameAndWatch : MonoBehaviour
 
             if (_tapTimer <= _tapDuration)
             {
-                Debug.LogWarning($"Tap OK Touch at {firstTouch.position}");
+                //Debug.LogWarning($"Tap OK Touch at {firstTouch.position}");
                 OnTap();
 
                 if (firstTouch.position.x < width / 2)

@@ -2,30 +2,53 @@ using System;
 using TMPro;
 using UnityEngine;
 
-public class ScoreManagerOld : MonoBehaviour
+/// <summary>
+/// Tracks and displays the player score for the GameAndWatch mini-game.
+/// Listens to ObjectMovement.OnGoodObjectCollected.
+/// </summary>
+public class ScoreManagerGameAndWatch : MonoBehaviour
 {
-    private TMP_Text _txt;
-    private int score = 0;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public static ScoreManagerGameAndWatch Instance { get; private set; }
 
+    /// <summary>Fired whenever the score changes, passes the new value.</summary>
+    public static event Action<int> OnScoreChanged;
 
-    private void Start()
+    public int Score { get; private set; }
+
+    [SerializeField] private TMP_Text _scoreText;
+
+    private void Awake()
     {
-        _txt = GetComponent<TMP_Text>();
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
     }
 
     private void OnEnable()
     {
-        ObjectMovement.OnGoodObjectCollected += UpdateScore;
+        ObjectMovement.OnGoodObjectCollected += AddPoint;
     }
 
     private void OnDisable()
     {
-        ObjectMovement.OnGoodObjectCollected -= UpdateScore;
+        ObjectMovement.OnGoodObjectCollected -= AddPoint;
     }
-    private void UpdateScore()
+
+    private void Start()
     {
-        score++;
-        _txt.text = $"{score}";
+        Score = 0;
+        Refresh();
+    }
+
+    private void AddPoint()
+    {
+        Score++;
+        Refresh();
+        OnScoreChanged?.Invoke(Score);
+    }
+
+    private void Refresh()
+    {
+        if (_scoreText != null)
+            _scoreText.text = Score.ToString("D6");
     }
 }

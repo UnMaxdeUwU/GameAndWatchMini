@@ -4,7 +4,7 @@ using UnityEngine;
 public class LifeChangeUi : MonoBehaviour
 {
     private TMP_Text _txt;
-    private int _currentlife = 3;
+    [SerializeField] private int _currentlife = 5;
 
 
 
@@ -18,12 +18,12 @@ public class LifeChangeUi : MonoBehaviour
 
     private void OnEnable()
     {
-         HealthManagerPlayer.OnHealthChanged+= changelifetext;
+         HealthManagerRunner.OnHealthChanged += changelifetext;
     }
 
     private void OnDisable()
     {
-        HealthManagerPlayer.OnHealthChanged-= changelifetext;
+        HealthManagerRunner.OnHealthChanged -= changelifetext;
     }
 
 

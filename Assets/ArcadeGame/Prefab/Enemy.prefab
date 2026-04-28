@@ -246,6 +246,7 @@ MonoBehaviour:
   damageableLayers:
     serializedVersion: 2
     m_Bits: 256
+  _collider2D: {fileID: 2120690535776299303}
 --- !u!95 &8933144587625201400
 Animator:
   serializedVersion: 7

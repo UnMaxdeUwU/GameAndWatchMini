@@ -84,7 +84,7 @@ public class MovementPlayerRunner : MonoBehaviour
         _inputManager.OnSwipeUp += Jump;
         _inputManager.OnSwipeRight += Dash;
         _inputManager.OnTape += StartRun;
-        HealthManagerPlayer.OnHealthChanged += OnHit;
+        HealthManagerRunner.OnHealthChanged += OnHit;
         Slam.HasAttack += OnAttack;
         CollisionObstacle.PlayerFallInVoid += Respawn;
         CollisionObstacle.Checkpoint += NewSafePosition;
@@ -97,7 +97,7 @@ public class MovementPlayerRunner : MonoBehaviour
         _inputManager.OnSwipeDown -= Fall;
         _inputManager.OnSwipeUp -= Jump;
         _inputManager.OnSwipeRight -= Dash;
-        HealthManagerPlayer.OnHealthChanged -=  OnHit;
+        HealthManagerRunner.OnHealthChanged -=  OnHit;
         Slam.HasAttack -= OnAttack;
         CollisionObstacle.PlayerFallInVoid -= Respawn;
         _inputManager.OnTape -= StartRun;

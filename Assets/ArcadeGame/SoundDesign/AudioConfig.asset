@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9760c10cd54233a488c92a17bf979a0c, type: 3}
+  m_Name: AudioConfig
+  m_EditorClassIdentifier: Assembly-CSharp::AudioConfig
+  enemyHit: {fileID: 8300000, guid: 54f74b7f11a15f944ae2d662f657875d, type: 3}
+  bossHit: {fileID: 8300000, guid: 54f74b7f11a15f944ae2d662f657875d, type: 3}
+  bossAttack: {fileID: 0}
+  laserSpawn: {fileID: 8300000, guid: 8877709703101434b8ad6eb2796bc9b1, type: 3}
+  bossAttackAlt1: {fileID: 8300000, guid: 28fb8ee3d21fbf442b9b0505c03b6d3c, type: 3}
+  bossAttackAlt2: {fileID: 8300000, guid: 4c5bbfc3f879dec4db2018ab466ab445, type: 3}
+  playerAttack: {fileID: 8300000, guid: e2860ec3f92b1cf4686333801f6ef15b, type: 3}
+  playerParrySuccess: {fileID: 8300000, guid: 555b2755b17f1e84a9599eb73f9b3c31, type: 3}
+  playerDeath: {fileID: 8300000, guid: 2750ac9a94dfd924fb6e3981677ed292, type: 3}
+  enemySimpleAttack: {fileID: 8300000, guid: f52e7eb1421723c4a9a5bff952c723f5, type: 3}
+  rankAppear: {fileID: 8300000, guid: 0344fafe5b9a8684e90e8fefd3054538, type: 3}
+  rankResult: {fileID: 8300000, guid: 7993209fa122300449539d94971a1e9f, type: 3}
+  hitTick: {fileID: 8300000, guid: c50d531ca6e028d44addbbcbfbb8090a, type: 3}
+  musicGame: {fileID: 8300000, guid: e61f0a3e199d8bf47bb5932bd4d8359c, type: 3}
+  musicGameOver: {fileID: 8300000, guid: a27cb3f571cf9e74e855772acb766965, type: 3}
+  defaultSfxVolume: 1
+  defaultMusicVolume: 0.6

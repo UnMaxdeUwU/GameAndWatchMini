@@ -66,17 +66,19 @@ public class ComboManager : MonoBehaviour
         CurrentCombo++;
         _timeoutTimer = _config.comboTimeout;
         _timerRunning = true;
-        _warningFired = false; // remet l'avertissement à zéro pour ce cycle
+        _warningFired = false;
 
         int newRank = GetRankForCombo(CurrentCombo);
         if (newRank != CurrentRank)
         {
             CurrentRank = newRank;
             OnRankChanged?.Invoke(CurrentRank, CurrentCombo);
+            AudioEvents.RaiseRankAppear();
         }
 
         OnComboIncreased?.Invoke(CurrentCombo);
-        OnHitScoreAdded?.Invoke(10); // +10 par hit
+        OnHitScoreAdded?.Invoke(10);
+        AudioEvents.RaiseHitTick();
     }
 
     /// <summary>

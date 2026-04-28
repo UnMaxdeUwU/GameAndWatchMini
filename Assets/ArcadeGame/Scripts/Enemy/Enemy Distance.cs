@@ -29,13 +29,20 @@ public class Enemy_Distance : MonoBehaviour
     private void OnEnable()
     {
         _enemy.Ataque += Attack;
+        HealthManagerPlayer.OnPlayerDied += OnPlayerDied;
     }
 
     private void OnDisable()
     {
         _enemy.Ataque -= Attack;
+        HealthManagerPlayer.OnPlayerDied -= OnPlayerDied;
     }
-    
+
+    private void OnPlayerDied()
+    {
+        StopAllCoroutines();
+        enabled = false;
+    }
 
     private void Attack()
     {
@@ -43,39 +50,30 @@ public class Enemy_Distance : MonoBehaviour
 
         _animator.SetTrigger("Flame Wawe");
         StartCoroutine(AttackRoutine());
-        
-        Debug.Log("Attaque!!!!!");
-
     }
 
     IEnumerator AttackRoutine()
     {
         canAttack = false;
-        //collider.enabled = true;
-
-        yield return new WaitForSeconds(0.1f); 
-
-        //_collider.enabled = false;
+        yield return new WaitForSeconds(0.1f);
         yield return new WaitForSeconds(_cooldown);
-
         canAttack = true;
     }
 
     public void SpawnProjectile()
     {
         Instantiate(_projectile, _ProjectileSpawnPoint.position, _ProjectileSpawnPoint.rotation);
+        AudioEvents.RaiseLaserSpawn();
     }
 
-
+    /// <summary>Appelé par l'event animator — active la hitbox et joue le son d'attaque.</summary>
     private void ActivateCollision2D()
     {
         _collider2D.enabled = true;
+        AudioEvents.RaiseBossAttack();
     }
 
-    private void DesactiveCollider2D()
-    {
-        _collider2D.enabled = false;
-    }
+    private void DesactiveCollider2D() => _collider2D.enabled = false;
 
     /*
     public void InactiveBox()

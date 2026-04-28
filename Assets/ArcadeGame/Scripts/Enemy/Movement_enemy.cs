@@ -38,6 +38,24 @@ public class Movement_enemy : MonoBehaviour
         StartCoroutine(Spawn());
     }
 
+    private void OnEnable()
+    {
+        HealthManagerPlayer.OnPlayerDied += OnPlayerDied;
+    }
+
+    private void OnDisable()
+    {
+        HealthManagerPlayer.OnPlayerDied -= OnPlayerDied;
+    }
+
+    private void OnPlayerDied()
+    {
+        StopAllCoroutines();
+        attackRoutine = null;
+        _rb.linearVelocity = Vector2.zero;
+        enabled = false;
+    }
+
     IEnumerator Spawn()
     {
         CanMove = false;

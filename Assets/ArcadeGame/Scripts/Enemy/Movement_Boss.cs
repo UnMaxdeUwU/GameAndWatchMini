@@ -39,6 +39,24 @@ public class Movement_Boss : MonoBehaviour
         slowMotion = FindObjectOfType<SlowMotion>();
     }
 
+    private void OnEnable()
+    {
+        HealthManagerPlayer.OnPlayerDied += OnPlayerDied;
+    }
+
+    private void OnDisable()
+    {
+        HealthManagerPlayer.OnPlayerDied -= OnPlayerDied;
+    }
+
+    private void OnPlayerDied()
+    {
+        StopAllCoroutines();
+        _attackRoutine = null;
+        _rb.linearVelocity = Vector2.zero;
+        enabled = false;
+    }
+
     public void EnterPhase2()
     {
         if (_phase2) return;
@@ -100,6 +118,15 @@ public class Movement_Boss : MonoBehaviour
         else
             _animator.SetTrigger("FireSlam");
     }
+
+    /// <summary>Appelé par l'event animator — active la hitbox et joue le son d'attaque mêlée.</summary>
+    public void ActiveBox()
+    {
+        _collider.enabled = true;
+        AudioEvents.RaiseBossAttackAlt();
+    }
+
+    public void InactiveBox() => _collider.enabled = false;
 
     // ── Appelé par BossHitbox (child GO) — plus de OnTriggerEnter2D ici ────
     public void OnHitboxTrigger(Collider2D other)

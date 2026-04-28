@@ -5,10 +5,12 @@ public class HealthManagerBoss : MonoBehaviour
 {
     [SerializeField] private float health = 20f;
     [SerializeField] private FeedbackConfig feedbackConfig;
-
+    [SerializeField] private Collider2D _collider2D;
     private Animator _animator;
     private Movement_Boss _movementBoss;
     private bool _phase2Triggered = false;
+    public static Action OnEliteKilled;
+    
 
     public static event Action OnBossKilled;
     [SerializeField] private LayerMask damageableLayers;
@@ -25,6 +27,7 @@ public class HealthManagerBoss : MonoBehaviour
         _animator.SetTrigger("Hit");
         HitStop.Instance?.Stop(feedbackConfig.hitStopDuration);
         CameraShake.Instance?.Shake(feedbackConfig.hitShakeDuration, feedbackConfig.hitShakeMagnitude);
+        AudioEvents.RaiseBossHit();
 
         // Premier dégât reçu → passe en phase 2
         if (!_phase2Triggered)
@@ -49,6 +52,8 @@ public class HealthManagerBoss : MonoBehaviour
 
     private void Die()
     {
+        OnEliteKilled?.Invoke();
+        _collider2D.enabled = false;
         _animator.SetTrigger("Death");
         OnBossKilled?.Invoke();
         Destroy(gameObject, 3f); // petit délai pour laisser l'anim de mort jouer

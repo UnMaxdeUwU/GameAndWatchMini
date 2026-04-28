@@ -1,2 +1,8 @@
-# GameAndWatch
-Jeu arcade. Des enemis arrivent par vague. On tape en appuyant sur l'écran. On peut parer les attaques des enemis en ayant le bon timing, pour parer il faut faire un swipe par le bas.
+Arcade — Beat'em All
+Un jeu de combat en 2D où le joueur affronte des vagues d'ennemis en continu. Le style visuel s'inspire des beat'em all classiques avec un système de combo dynamique qui s'emballe visuellement au fur et à mesure que le joueur enchaîne les coups avec comme feedback un texte qui grossit, couleurs qui changent du blanc au rouge sang selon le nombre de hits, flashs d'impact et rank splashs (BRUTAL, SAVAGE, GODLIKE). Le gameplay repose sur trois actions : attaque (Tap), parry (SwipeDown) et contre-attaque (si parry réussit). Le parry demande du timing et récompense le joueur avec un slowmotion, stun ennemi et une attaque de contre. La difficulté monte automatiquement : les spawns s'accélèrent, les ennemis ordinaires laissent place à des ennemis d’élite. Cette ennemis à deux phases qui passe du combat à distance au corps-à-corps une fois touché.
+Runner
+Un jeu de course à défilement automatique où le joueur doit survivre le plus longtemps possible en évitant les obstacles et en collectant des pièces et atteindre la fin de la course. Le gameplay repose sur 4 actions, Jump ( swipe up) , Dash( swipe right), Attack ( tap), Fall ( swipeDown). Le score est basé sur les pièces collectées, enregistré dans un leaderboard dédié.
+
+Game & Watch
+Un mini-jeu au style rétro inspiré des consoles LCD des années 80. L'esthétique est très épurée, avec des animations simples et un feedback sonore discret.  C’est un parti libre artistique. Le gameplay tourne autour d’esquive et de collecte. Le joueur doit réagir rapidement à des situations répétitives qui s'accélèrent progressivement, dans la tradition des Game & Watch originaux de Nintendo. L'objectif est d'atteindre le meilleur score avant de perdre toutes ses vies.
+

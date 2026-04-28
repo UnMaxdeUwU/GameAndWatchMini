@@ -12,12 +12,12 @@ public class ChangeOpacity : MonoBehaviour
 
     private void OnEnable()
     {
-        HealthManagerPlayer.OnHealthChanged += ChangeOpacityImage;
+        HealthManagerRunner.OnHealthChanged += ChangeOpacityImage;
     }
 
     private void OnDisable()
     {
-        HealthManagerPlayer.OnHealthChanged -= ChangeOpacityImage;
+        HealthManagerRunner.OnHealthChanged -= ChangeOpacityImage;
     }
 
     private void ChangeOpacityImage()

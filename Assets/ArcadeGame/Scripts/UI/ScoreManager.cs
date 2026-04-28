@@ -9,6 +9,9 @@ using UnityEngine;
 /// </summary>
 public class ScoreManager : MonoBehaviour
 {
+    /// <summary>Static instance for direct read access (e.g. GameOverManager).</summary>
+    public static ScoreManager Instance { get; private set; }
+
     [SerializeField] private ComboConfig _config;
 
     // Multiplicateurs par rank index (0=BRUTAL … 4=GODLIKE)
@@ -22,6 +25,11 @@ public class ScoreManager : MonoBehaviour
     public static event Action<int, Color> OnBonusScoreAdded; // (bonus, couleur du rang)
 
     public int TotalScore { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void OnEnable()
     {

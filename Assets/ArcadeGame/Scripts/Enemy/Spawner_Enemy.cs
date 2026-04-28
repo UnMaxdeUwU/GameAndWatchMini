@@ -2,71 +2,163 @@ using UnityEngine;
 
 public class Spawner_Enemy : MonoBehaviour
 {
+    [Header("Normal Enemies")]
     [SerializeField] private Transform[] spawner;
-    [SerializeField] private TimeManager _timeManager;
-    [SerializeField] private GameObject Enemy;
-    [SerializeField] private int _spawnTimer = 0;
-    [SerializeField] private int _spawnDelayDuration = 3;
+    [SerializeField] private TimeManager timeManager;
+    [SerializeField] private GameObject enemy;
 
-    [Header("--- Boss ---")]
-    [SerializeField] private GameObject bossEnemy;
-    [SerializeField] private int killsRequiredForBoss = 10;
+    [SerializeField] private int spawnDelayDuration = 9;
+    [SerializeField] private int minimumSpawnDelay = 3;
 
-    private int spawnerindex;
-    private int _killCount = 0;
-    private bool _bossSpawned = false;
+
+    [Header("Elite")]
+    [SerializeField] private GameObject eliteEnemy;
+    [SerializeField] private int killsRequiredForElite = 10;
+
+    [SerializeField] private int eliteOnlySpawnDelay = 8;
+
+
+    private int spawnTimer;
+    private int spawnerIndex;
+    private int killCount;
+
+    private bool eliteAlive;
+    private bool eliteOnlyMode;
+
+
 
     private void OnEnable()
     {
-        _timeManager.OnTimePassed += TimeGestion;
+        timeManager.OnTimePassed += TimeGestion;
         HealthManagerEnemy.OnEnemyKilled += OnEnemyKilled;
+        HealthManagerBoss.OnEliteKilled   += OnEliteKilled;
+        HealthManagerPlayer.OnPlayerDied  += OnPlayerDied;
     }
 
     private void OnDisable()
     {
-        _timeManager.OnTimePassed -= TimeGestion;
+        if (timeManager != null)
+            timeManager.OnTimePassed -= TimeGestion;
+
         HealthManagerEnemy.OnEnemyKilled -= OnEnemyKilled;
+        HealthManagerBoss.OnEliteKilled  -= OnEliteKilled;
+        HealthManagerPlayer.OnPlayerDied -= OnPlayerDied;
     }
 
-    /// <summary>
-    /// À appeler depuis HealthManagerEnemy quand un ennemi basique meurt.
-    /// </summary>
-    public void OnEnemyKilled()
+    /// <summary>Désactive le spawner dès que le joueur est mort.</summary>
+    private void OnPlayerDied()
     {
-        if (_bossSpawned) return;
-
-        _killCount++;
-        if (_killCount >= killsRequiredForBoss)
-            SpawnBoss();
+        enabled = false;
     }
 
-    private void random()
-    {
-        spawnerindex = Random.Range(0, spawner.Length);
-    }
 
-    private void TimeGestion()
+    private void OnEnemyKilled()
     {
-        // Plus de spawn basique si le boss est là
-        if (_bossSpawned) return;
+        if (eliteAlive || eliteOnlyMode)
+            return;
 
-        _spawnTimer++;
-        if (_spawnTimer >= _spawnDelayDuration)
+        killCount++;
+
+        if (killCount >= killsRequiredForElite)
         {
-            _spawnTimer = 0;
-            random();
-            if (spawnerindex == 0)
-                Instantiate(Enemy, spawner[spawnerindex].position, Quaternion.identity);
-            else
-                Instantiate(Enemy, spawner[spawnerindex].position, Quaternion.Euler(0f, -180f, 0f));
+            killCount = 0;
+
+            eliteAlive = true;
+            SpawnElite();
         }
     }
 
-    private void SpawnBoss()
+
+    private void OnEliteKilled()
     {
-        _bossSpawned = true;
-        // Toujours sur le spawner[0], face droite
-        Instantiate(bossEnemy, spawner[0].position, Quaternion.identity);
-        Debug.Log("Boss spawné !");
+        eliteAlive = false;
+
+        // baisse le nombre requis à chaque élite vaincue
+        if (killsRequiredForElite > 1)
+            killsRequiredForElite--;
+
+        // accélère le spawn
+        spawnDelayDuration -= 2;
+        spawnDelayDuration =
+            Mathf.Max(spawnDelayDuration, minimumSpawnDelay);
+
+
+        Debug.Log("Kills requis : " + killsRequiredForElite);
+
+
+        // mode fin de run
+        if (killsRequiredForElite <= 1)
+        {
+            eliteOnlyMode = true;
+            spawnTimer = 0;
+            Debug.Log("MODE ELITE ONLY");
+        }
+    }
+
+
+
+    private void TimeGestion()
+    {
+        spawnTimer++;
+
+        //----------------------------------
+        // Mode elite infini
+        //----------------------------------
+        if (eliteOnlyMode)
+        {
+            if (spawnTimer >= eliteOnlySpawnDelay)
+            {
+                spawnTimer = 0;
+                SpawnElite();
+            }
+
+            return;
+        }
+
+        //----------------------------------
+        // Pause si élite vivante
+        //----------------------------------
+        if (eliteAlive)
+            return;
+
+
+        //----------------------------------
+        // Spawn normal
+        //----------------------------------
+        if (spawnTimer >= spawnDelayDuration)
+        {
+            spawnTimer = 0;
+            SpawnRegularEnemy();
+        }
+    }
+
+
+
+    private void SpawnRegularEnemy()
+    {
+        spawnerIndex = Random.Range(0, spawner.Length);
+
+        Quaternion rot =
+            spawnerIndex == 0
+                ? Quaternion.identity
+                : Quaternion.Euler(0,-180,0);
+
+        Instantiate(
+            enemy,
+            spawner[spawnerIndex].position,
+            rot
+        );
+    }
+
+
+    private void SpawnElite()
+    {
+        Instantiate(
+            eliteEnemy,
+            spawner[0].position,
+            Quaternion.identity
+        );
+
+        Debug.Log("Elite Spawned");
     }
 }

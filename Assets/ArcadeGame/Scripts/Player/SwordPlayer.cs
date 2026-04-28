@@ -50,6 +50,7 @@ public class SwordPlayer : MonoBehaviour
         if (!canAttack) return;
         StartCoroutine(AttackRoutine());
         animator.SetTrigger("Slash");
+        AudioEvents.RaisePlayerAttack();
     }
 
     IEnumerator AttackRoutine()
@@ -118,6 +119,7 @@ public class SwordPlayer : MonoBehaviour
     private void Counter(Transform point)
     {
         animator.SetTrigger("HasParry");
+        AudioEvents.RaisePlayerParrySuccess();
         if (feedbackConfig != null)
         {
             HitStop.Instance?.Stop(feedbackConfig.counterStopDuration);

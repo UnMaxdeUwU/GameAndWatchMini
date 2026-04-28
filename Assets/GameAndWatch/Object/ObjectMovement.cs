@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class ObjectMovement : MonoBehaviour
@@ -14,6 +15,8 @@ public class ObjectMovement : MonoBehaviour
     [SerializeField] private AudioType _destruction;
 
     [SerializeField] private int idLine;
+    [SerializeField] private Sprite _explodeSprite;
+    [SerializeField] private float _explodeDisplayDuration = 0.4f;
 
     private bool _isGoodObject; 
 
@@ -74,6 +77,7 @@ public class ObjectMovement : MonoBehaviour
             _objectfalling.transform.position = _transforms[_index].position;
 
             _audioEventDispatcher.Playaudio(_objectmovement);
+            GameAndWatchAudioEvents.RaiseObjectChangeLine();
 
             indexChange?.Invoke(idLine, _index);
 
@@ -100,6 +104,7 @@ public class ObjectMovement : MonoBehaviour
         {
             // EVENT SCORE
             OnGoodObjectCollected?.Invoke();
+            GameAndWatchAudioEvents.RaiseObjectCollected();
         }
 
         Destroy(_objectfalling);
@@ -111,9 +116,8 @@ public class ObjectMovement : MonoBehaviour
         if (_objectfalling == null)
             return;
 
-        Destroy(_objectfalling);
-
         _audioEventDispatcher.Playaudio(_destruction);
+        GameAndWatchAudioEvents.RaiseWrongObjectExplode();
 
         // EXPLOSION SUR LA LIGNE
         OnExplosion?.Invoke(idLine);
@@ -123,9 +127,24 @@ public class ObjectMovement : MonoBehaviour
             OnExplosion?.Invoke(idLine - 1);
 
         // EXPLOSION LIGNE DROITE
-        if (idLine + 1 < 4) // 4 = nombre max de lignes (à adapter)
+        if (idLine + 1 < 5)
             OnExplosion?.Invoke(idLine + 1);
 
+        StartCoroutine(ExplodeRoutine());
+    }
+
+    private IEnumerator ExplodeRoutine()
+    {
+        if (_explodeSprite != null)
+        {
+            SpriteRenderer sr = _objectfalling.GetComponent<SpriteRenderer>();
+            if (sr != null)
+                sr.sprite = _explodeSprite;
+        }
+
+        yield return new WaitForSeconds(_explodeDisplayDuration);
+
+        Destroy(_objectfalling);
         _index = -1;
     }
 }

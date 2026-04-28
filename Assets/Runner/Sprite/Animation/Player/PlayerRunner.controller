@@ -372,7 +372,7 @@ AnimatorStateMachine:
     m_Position: {x: 1090, y: 250, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1101832743933546253}
-    m_Position: {x: 30, y: 180, z: 0}
+    m_Position: {x: 20, y: 220, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8115176409979795529}
     m_Position: {x: 1070, y: 70, z: 0}
@@ -485,7 +485,7 @@ AnimatorController:
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
-    m_DefaultBool: 0
+    m_DefaultBool: 1
     m_Controller: {fileID: 9100000}
   - m_Name: IsFinishJump
     m_Type: 4

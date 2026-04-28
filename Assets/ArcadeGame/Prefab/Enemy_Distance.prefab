@@ -213,6 +213,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c093013a544dde45a30e405ec25b5a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossHitbox
+--- !u!70 &5869885785175587736 stripped
+CapsuleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 2120690535776299303, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
+  m_PrefabInstance: {fileID: 5483188397658591935}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6125972987623766701 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1809287281526712338, guid: eeaaf61675aacc945afc142c0848eff9, type: 3}
@@ -253,6 +258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HealthManagerBoss
   health: 20
   feedbackConfig: {fileID: 11400000, guid: 7077cf6bb584a3b4494df0a27d1733d0, type: 2}
+  _collider2D: {fileID: 5869885785175587736}
   damageableLayers:
     serializedVersion: 2
     m_Bits: 256
